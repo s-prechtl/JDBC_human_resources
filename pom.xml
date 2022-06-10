@@ -64,7 +64,7 @@
                         <!-- Default configuration for running with: mvn clean javafx:run -->
                         <id>default-cli</id>
                         <configuration>
-                            <mainClass>us.insy.jdbc_human_resources/us.insy.jdbc_human_resources.HelloApplication
+                            <mainClass>us.insy.jdbc_human_resources/us.insy.jdbc_human_resources.MainApplication
                             </mainClass>
                             <launcher>app</launcher>
                             <jlinkZipName>app</jlinkZipName>
