@@ -6,8 +6,13 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Arrays;
 
 public class HelloApplication extends Application {
+    public static String user;
+    public static String pass;
     @Override
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("hello-view.fxml"));
@@ -18,6 +23,18 @@ public class HelloApplication extends Application {
     }
 
     public static void main(String[] args) {
-        launch();
+        System.out.println(Arrays.toString(args));
+        user = args[0];
+        pass = args[1];
+
+        DatabaseConnector dbc = DatabaseConnector.getInstance();
+        ResultSet rs = dbc.executeStatement("SELECT * FROM t_city");
+        try {
+            while (rs.next()) {
+                System.out.println(rs.getString("name"));
+            }
+        } catch (Exception ignored) {}
+
+        //launch();
     }
 }

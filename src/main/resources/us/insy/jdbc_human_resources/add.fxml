@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Group?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Spinner?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="536.0" prefWidth="600.0" spacing="5.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Label text="Vorname" />
+      <TextField fx:id="textFieldFirstName" />
+      <Label text="Nachname" />
+      <TextField fx:id="textFieldLastName" />
+      <Label text="E-Mail" />
+      <TextField fx:id="textFieldEmail" layoutX="10.0" layoutY="61.0" />
+      <Label text="Geburtsdatum" />
+      <DatePicker fx:id="datePickerBirthDate" />
+      <Label text="Geschlecht" />
+      <Group fx:id="groupGender" />
+      <Label text="Gehalt" />
+      <TextField fx:id="textFieldSalary" />
+      <Label text="Wohnort" />
+      <ComboBox fx:id="comboBoxLivingIn" prefWidth="150.0" />
+      <Label text="Abteilung" />
+      <ComboBox fx:id="comboBoxDepartment" prefWidth="150.0" />
+      <Label text="Raum" />
+      <HBox prefHeight="100.0" prefWidth="200.0">
+         <children>
+            <Spinner fx:id="spinnerRommNumber" />
+            <Group fx:id="groupFloor" />
+         </children>
+      </HBox>
+   </children>
+   <padding>
+      <Insets bottom="30.0" left="30.0" right="30.0" top="30.0" />
+   </padding>
+</VBox>
