@@ -22,7 +22,7 @@ public class DatabaseConnector {
 
     private void startConnection() {
         try {
-            connection = DriverManager.getConnection(dbUrl, HelloApplication.user, HelloApplication.pass);
+            connection = DriverManager.getConnection(dbUrl, MainApplication.user, MainApplication.pass);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

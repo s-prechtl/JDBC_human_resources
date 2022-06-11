@@ -17,7 +17,6 @@ import java.util.Collection;
 
 public class MainController {
     public HBox hBoxMainArea;
-    public Menu menuView;
 
     public void initialize() throws IOException {
 
@@ -49,7 +48,7 @@ public class MainController {
 //        Scene scene = new Scene(fxmlLoader.load());
 //        scene.getStylesheets().add(BootstrapFX.bootstrapFXStylesheet());
 //        paneFXView.getChildren()
-
+        hBoxMainArea.getChildren().clear();
         URL u = MainApplication.class.getResource(fileName);
         System.out.println(u);
         assert u != null;
