@@ -27,15 +27,6 @@ public class MainApplication extends Application {
         System.out.println(Arrays.toString(args));
         user = args[0];
         pass = args[1];
-
-        DatabaseConnector dbc = DatabaseConnector.getInstance();
-        ResultSet rs = dbc.executeStatement("SELECT * FROM t_city");
-        try {
-            while (rs.next()) {
-                System.out.println(rs.getString("name"));
-            }
-        } catch (Exception ignored) {}
-
         launch();
     }
 }

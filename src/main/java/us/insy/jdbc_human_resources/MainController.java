@@ -19,7 +19,6 @@ public class MainController {
     public HBox hBoxMainArea;
 
     public void initialize() throws IOException {
-
         setSceneOnPane("view-view.fxml");
     }
 

@@ -15,23 +15,23 @@
                   <Insets />
                </VBox.margin>
                <children>
-                  <CheckBox fx:id="checkBoxPersID" mnemonicParsing="false" onAction="#onCheckBoxClicked" prefHeight="17.0" prefWidth="68.0" text="Pers. ID" />
-                  <CheckBox fx:id="checkBoxFirstName" mnemonicParsing="false" onAction="#onCheckBoxClicked" prefHeight="17.0" prefWidth="75.0" text="Vorname" />
-                  <CheckBox fx:id="checkBoxLastname" mnemonicParsing="false" onAction="#onCheckBoxClicked" prefHeight="17.0" prefWidth="83.0" text="Nachname" />
-                  <CheckBox fx:id="checkBoxGender" mnemonicParsing="false" onAction="#onCheckBoxClicked" prefHeight="17.0" prefWidth="87.0" text="Geschlecht" />
-                  <CheckBox fx:id="checkBoxEmail" mnemonicParsing="false" onAction="#onCheckBoxClicked" text="E-Mail" />
-                  <CheckBox fx:id="checkBoxBirthDate" mnemonicParsing="false" onAction="#onCheckBoxClicked" text="Geb. Datum" />
-                  <CheckBox fx:id="checkBoxSalary" mnemonicParsing="false" onAction="#onCheckBoxClicked" text="Gehalt" />
+                  <CheckBox fx:id="checkBoxPersID" mnemonicParsing="false" onAction="#onCheckBoxClicked" prefHeight="17.0" prefWidth="68.0" selected="true" text="Pers. ID" />
+                  <CheckBox fx:id="checkBoxFirstName" mnemonicParsing="false" onAction="#onCheckBoxClicked" prefHeight="17.0" prefWidth="75.0" selected="true" text="Vorname" />
+                  <CheckBox fx:id="checkBoxLastname" mnemonicParsing="false" onAction="#onCheckBoxClicked" prefHeight="17.0" prefWidth="83.0" selected="true" text="Nachname" />
+                  <CheckBox fx:id="checkBoxGender" mnemonicParsing="false" onAction="#onCheckBoxClicked" prefHeight="17.0" prefWidth="87.0" selected="true" text="Geschlecht" />
+                  <CheckBox fx:id="checkBoxEmail" mnemonicParsing="false" onAction="#onCheckBoxClicked" selected="true" text="E-Mail" />
+                  <CheckBox fx:id="checkBoxBirthDate" mnemonicParsing="false" onAction="#onCheckBoxClicked" selected="true" text="Geb. Datum" />
+                  <CheckBox fx:id="checkBoxSalary" mnemonicParsing="false" onAction="#onCheckBoxClicked" selected="true" text="Gehalt" />
                </children>
             </HBox>
             <HBox alignment="CENTER" spacing="20.0">
                <children>
-                  <CheckBox fx:id="checkBoxLivingIn" mnemonicParsing="false" onAction="#onCheckBoxClicked" text="Wohnort" />
-                  <CheckBox fx:id="checkBoxZipCode" mnemonicParsing="false" onAction="#onCheckBoxClicked" text="PLZ" />
-                  <CheckBox fx:id="checkBoxDepartment" mnemonicParsing="false" onAction="#onCheckBoxClicked" text="Abteilung" />
-                  <CheckBox fx:id="checkBoxRoomNr" mnemonicParsing="false" onAction="#onCheckBoxClicked" text="Raumnummer" />
-                  <CheckBox fx:id="checkBoxFloorLevel" mnemonicParsing="false" onAction="#onCheckBoxClicked" text="Stock" />
-                  <CheckBox fx:id="checkBoxRoomSize" mnemonicParsing="false" onAction="#onCheckBoxClicked" text="Raumgröße" />
+                  <CheckBox fx:id="checkBoxLivingIn" mnemonicParsing="false" onAction="#onCheckBoxClicked" selected="true" text="Wohnort" />
+                  <CheckBox fx:id="checkBoxZipCode" mnemonicParsing="false" onAction="#onCheckBoxClicked" selected="true" text="PLZ" />
+                  <CheckBox fx:id="checkBoxDepartment" mnemonicParsing="false" onAction="#onCheckBoxClicked" selected="true" text="Abteilung" />
+                  <CheckBox fx:id="checkBoxRoomNr" mnemonicParsing="false" onAction="#onCheckBoxClicked" selected="true" text="Raumnummer" />
+                  <CheckBox fx:id="checkBoxFloorLevel" mnemonicParsing="false" onAction="#onCheckBoxClicked" selected="true" text="Stock" />
+                  <CheckBox fx:id="checkBoxRoomSize" mnemonicParsing="false" onAction="#onCheckBoxClicked" selected="true" text="Raumgröße" />
                </children>
             </HBox>
          </children>

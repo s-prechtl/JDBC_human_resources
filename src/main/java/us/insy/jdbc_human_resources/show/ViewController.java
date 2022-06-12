@@ -53,14 +53,19 @@ public class ViewController {
     private String statement;
     private ResultSet result;
 
+    public void initialize() throws SQLException {
+        update();
+    }
+
     private void update() throws SQLException {
         updateSQLStatement();
         result = db.executeStatement(statement);
+        result.next();
         updateLabels();
     }
 
     private void updateLabels() throws SQLException {
-        updateLabelInt(labelID, checkBoxPersID, "person_id");
+        updateLabelInt(labelID, checkBoxPersID, "hr.person_id");
         updateLabelString(labelFirstName, checkBoxFirstName, "first_name");
         updateLabelString(labelLastName, checkBoxLastname, "last_name");
         updateLabelString(labelGender, checkBoxGender, "gender");
@@ -68,7 +73,7 @@ public class ViewController {
         updateLabelString(labelEmail, checkBoxEmail, "email");
         updateLabelInt(labelSalary, checkBoxSalary, "salary");
         updateLabelString(labelCity, checkBoxLivingIn, "city.name");
-        updateLabelString(labelZipCode, checkBoxZipCode, "zip");
+        updateLabelString(labelZipCode, checkBoxZipCode, "hr.zip");
         updateLabelString(labelDepartmentName, checkBoxDepartment, "dp.name");
         updateLabelInt(labelRoomNumber, checkBoxRoomNr, "hroom.room_nr");
         updateLabelString(labelLevel, checkBoxFloorLevel, "hroom.room_floor");
@@ -92,7 +97,7 @@ public class ViewController {
     private void updateSQLStatement(){
         statement = "SELECT ";
         if (checkBoxPersID.isSelected()) {
-            statement += "person_id, ";
+            statement += "hr.person_id, ";
         }
         if (checkBoxFirstName.isSelected()) {
             statement += "first_name, ";
@@ -107,10 +112,10 @@ public class ViewController {
             statement += "date_of_birth, ";
         }
         if (checkBoxZipCode.isSelected()) {
-            statement += "zip, ";
+            statement += "hr.zip, ";
         }
         if (checkBoxDepartment.isSelected()) {
-            statement += "department_id, ";
+            statement += "hr.department_id, ";
         }
         if (checkBoxRoomSize.isSelected()){
             statement += "room.size, ";
@@ -128,26 +133,28 @@ public class ViewController {
             statement += "hroom.room_floor, ";
         }
 
-        statement += "FROM t_human_resources ";
+        statement = statement.substring(0, statement.length()-2); //strip last comma
+        statement += " FROM t_human_resources hr ";
 
         if (checkBoxFloorLevel.isSelected() || checkBoxRoomNr.isSelected() || checkBoxRoomSize.isSelected()){
-            statement += "INNER JOIN t_hr_room hroom ON person_id=hroom.person_id ";
+            statement += "INNER JOIN t_hr_room hroom ON hr.person_id=hroom.person_id ";
         }
         if (checkBoxRoomSize.isSelected()){
             statement += "INNER JOIN t_room room ON (hroom.room_nr=room.room_nr and hroom.room_floor=room.floor) ";
         }
         if(checkBoxSalary.isSelected()){
-            statement += "INNER JOIN t_salary ON person_id=t_salary.person_id ";
+            statement += "INNER JOIN t_salary ON hr.person_id=t_salary.person_id ";
         }
 
         if(checkBoxLivingIn.isSelected()){
-            statement += "INNER JOIN t_city city ON zip=city.zip ";
+            statement += "INNER JOIN t_city city ON hr.zip=city.zip ";
         }
 
         if(checkBoxDepartment.isSelected()){
-            statement += "INNER JOIN t_department dp ON department_id=dp.department_id";
+            statement += "INNER JOIN t_department dp ON hr.department_id=dp.department_id";
         }
         statement += ";";
+        System.out.println(statement);
     }
 
     public void onCheckBoxClicked(ActionEvent actionEvent) throws SQLException {
