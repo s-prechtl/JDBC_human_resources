@@ -13,7 +13,7 @@ public class DatabaseConnector {
 }
 
 
-    static final String dbUrl = "jdbc:postgresql://localhost:5432/dhain";
+    static final String dbUrl = "jdbc:postgresql://xserv:5432/dhain";
     private Connection connection;
 
     private DatabaseConnector() {

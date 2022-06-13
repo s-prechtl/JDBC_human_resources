@@ -24,22 +24,15 @@ public class MainController {
 
     @FXML
     private void onMenuViewClicked(ActionEvent e) throws IOException {
-        System.out.println("Asd");
         setSceneOnPane("view-view.fxml");
     }
 
     @FXML
     private void onMenuEditClicked() {
-
-        System.out.println("ASAAA");
     }
 
     @FXML
     private void onMenuAddClicked() {
-
-        System.out.println("ASAAA");
-        System.out.println("ASAAA");
-        System.out.println("ASAAA");
     }
 
     private void setSceneOnPane(String fileName) throws IOException {
@@ -49,7 +42,6 @@ public class MainController {
 //        paneFXView.getChildren()
         hBoxMainArea.getChildren().clear();
         URL u = MainApplication.class.getResource(fileName);
-        System.out.println(u);
         assert u != null;
         Pane pane = FXMLLoader.load(u);
         hBoxMainArea.getChildren().add(pane);

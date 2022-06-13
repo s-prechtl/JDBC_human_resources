@@ -24,7 +24,6 @@ public class MainApplication extends Application {
     }
 
     public static void main(String[] args) {
-        System.out.println(Arrays.toString(args));
         user = args[0];
         pass = args[1];
         launch();

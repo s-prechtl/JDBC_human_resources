@@ -7,6 +7,9 @@ package us.insy.jdbc_human_resources.show;
 import javafx.event.ActionEvent;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.Spinner;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.HBox;
 import us.insy.jdbc_human_resources.DatabaseConnector;
 
 import java.sql.ResultSet;
@@ -49,6 +52,22 @@ public class ViewController {
     public Label labelRoomNumber;
     public Label labelRoomSize;
     public Label labelGender;
+    public HBox hBoxID;
+    public HBox hBoxFirstname;
+    public HBox hBoxLastname;
+    public HBox hBoxGender;
+    public HBox hBoxEmail;
+    public HBox hBoxBirthDate;
+    public HBox hBoxSalary;
+    public HBox hBoxLiving;
+    public HBox hBoxCity;
+    public HBox hBoxZip;
+    public HBox hBoxDepartment;
+    public HBox hBoxDepName;
+    public HBox hBoxLevel;
+    public HBox hBoxRoomNr;
+    public HBox hBoxRoomSize;
+    public Spinner spinnerID;
 
     private String statement;
     private ResultSet result;
@@ -59,42 +78,47 @@ public class ViewController {
 
     private void update() throws SQLException {
         updateSQLStatement();
-        result = db.executeStatement(statement);
-        result.next();
+        if (!statement.contains("SELECT FROM")) {
+            result = db.executeStatement(statement);
+            result.next();
+        }
         updateLabels();
     }
 
     private void updateLabels() throws SQLException {
-        updateLabelInt(labelID, checkBoxPersID, "hr.person_id");
-        updateLabelString(labelFirstName, checkBoxFirstName, "first_name");
-        updateLabelString(labelLastName, checkBoxLastname, "last_name");
-        updateLabelString(labelGender, checkBoxGender, "gender");
-        updateLabelString(labelBirthDate, checkBoxBirthDate, "date_of_birth");
-        updateLabelString(labelEmail, checkBoxEmail, "email");
-        updateLabelInt(labelSalary, checkBoxSalary, "salary");
-        updateLabelString(labelCity, checkBoxLivingIn, "city.name");
-        updateLabelString(labelZipCode, checkBoxZipCode, "hr.zip");
-        updateLabelString(labelDepartmentName, checkBoxDepartment, "dp.name");
-        updateLabelInt(labelRoomNumber, checkBoxRoomNr, "hroom.room_nr");
-        updateLabelString(labelLevel, checkBoxFloorLevel, "hroom.room_floor");
-        updateLabelInt(labelRoomSize, checkBoxRoomSize, "room.size");
+        updateLabelInt(hBoxID, labelID, checkBoxPersID, "person_id");
+        updateLabelString(hBoxFirstname, labelFirstName, checkBoxFirstName, "first_name");
+        updateLabelString(hBoxLastname, labelLastName, checkBoxLastname, "last_name");
+        updateLabelString(hBoxGender, labelGender, checkBoxGender, "gender");
+        updateLabelString(hBoxBirthDate, labelBirthDate, checkBoxBirthDate, "date_of_birth");
+        updateLabelString(hBoxEmail, labelEmail, checkBoxEmail, "email");
+        updateLabelInt(hBoxSalary, labelSalary, checkBoxSalary, "salary");
+        updateLabelString(hBoxCity, labelCity, checkBoxLivingIn, "name");
+        updateLabelString(hBoxZip, labelZipCode, checkBoxZipCode, "zip");
+        updateLabelString(hBoxDepName, labelDepartmentName, checkBoxDepartment, "name");
+        updateLabelInt(hBoxRoomNr, labelRoomNumber, checkBoxRoomNr, "room_nr");
+        updateLabelString(hBoxLevel, labelLevel, checkBoxFloorLevel, "room_floor");
+        updateLabelInt(hBoxRoomSize, labelRoomSize, checkBoxRoomSize, "size");
+
+        hBoxDepartment.setVisible(checkBoxRoomSize.isSelected() || checkBoxRoomNr.isSelected() || checkBoxFloorLevel.isSelected());
+        
     }
 
-    private void updateLabelInt(Label label, CheckBox shown, String columnLabel) throws SQLException {
-        label.setVisible(shown.isSelected());
-        if (shown.isSelected()){
+    private void updateLabelInt(HBox hBox, Label label, CheckBox shown, String columnLabel) throws SQLException {
+        hBox.setVisible(shown.isSelected());
+        if (shown.isSelected()) {
             label.setText(String.valueOf(result.getInt(columnLabel)));
         }
     }
 
-    private void updateLabelString(Label label, CheckBox shown, String columnLabel) throws SQLException {
-        label.setVisible(shown.isSelected());
-        if (shown.isSelected()){
-            label.setText(String.valueOf(result.getString(columnLabel)));
+    private void updateLabelString(HBox hBox, Label label, CheckBox shown, String columnLabel) throws SQLException {
+        hBox.setVisible(shown.isSelected());
+        if (shown.isSelected()) {
+            label.setText(result.getString(columnLabel));
         }
     }
 
-    private void updateSQLStatement(){
+    private void updateSQLStatement() {
         statement = "SELECT ";
         if (checkBoxPersID.isSelected()) {
             statement += "hr.person_id, ";
@@ -108,6 +132,9 @@ public class ViewController {
         if (checkBoxEmail.isSelected()) {
             statement += "email, ";
         }
+        if (checkBoxGender.isSelected()) {
+            statement += "gender, ";
+        }
         if (checkBoxBirthDate.isSelected()) {
             statement += "date_of_birth, ";
         }
@@ -117,7 +144,7 @@ public class ViewController {
         if (checkBoxDepartment.isSelected()) {
             statement += "hr.department_id, ";
         }
-        if (checkBoxRoomSize.isSelected()){
+        if (checkBoxRoomSize.isSelected()) {
             statement += "room.size, ";
         }
         if (checkBoxSalary.isSelected()) {
@@ -133,31 +160,64 @@ public class ViewController {
             statement += "hroom.room_floor, ";
         }
 
-        statement = statement.substring(0, statement.length()-2); //strip last comma
+        statement = statement.substring(0, statement.length() - 2); //strip last comma
         statement += " FROM t_human_resources hr ";
 
-        if (checkBoxFloorLevel.isSelected() || checkBoxRoomNr.isSelected() || checkBoxRoomSize.isSelected()){
+        if (checkBoxFloorLevel.isSelected() || checkBoxRoomNr.isSelected() || checkBoxRoomSize.isSelected()) {
             statement += "INNER JOIN t_hr_room hroom ON hr.person_id=hroom.person_id ";
         }
-        if (checkBoxRoomSize.isSelected()){
+        if (checkBoxRoomSize.isSelected()) {
             statement += "INNER JOIN t_room room ON (hroom.room_nr=room.room_nr and hroom.room_floor=room.floor) ";
         }
-        if(checkBoxSalary.isSelected()){
+        if (checkBoxSalary.isSelected()) {
             statement += "INNER JOIN t_salary ON hr.person_id=t_salary.person_id ";
         }
 
-        if(checkBoxLivingIn.isSelected()){
+        if (checkBoxLivingIn.isSelected()) {
             statement += "INNER JOIN t_city city ON hr.zip=city.zip ";
         }
 
-        if(checkBoxDepartment.isSelected()){
+        if (checkBoxDepartment.isSelected()) {
             statement += "INNER JOIN t_department dp ON hr.department_id=dp.department_id";
         }
         statement += ";";
-        System.out.println(statement);
     }
 
-    public void onCheckBoxClicked(ActionEvent actionEvent) throws SQLException {
+    public void onCheckBoxClicked() throws SQLException {
         update();
+    }
+
+    public void onButtonNextClicked(ActionEvent actionEvent) throws SQLException {
+        int id = Integer.parseInt(labelID.getText()) + 1;
+        if (result.isLast()) {
+            update();
+            id = 1;
+        }
+        jumpTo(id);
+    }
+
+    public void onPreviousClicked() throws SQLException {
+        int id = Integer.parseInt(labelID.getText()) - 1;
+        if (id < 1) {
+            id = result.getInt("person_id");
+        }
+        jumpTo(id);
+    }
+
+    private void jumpTo(int id) throws SQLException {
+        update();
+        while (result.next()) {
+            if (result.getInt("person_id") == id) {
+                updateLabels();
+                break;
+            }
+        }
+    }
+
+    public void onJumpToClicked() throws SQLException {
+        if (spinnerID.getValue() != null) {
+            int id = (int) spinnerID.getValue();
+            jumpTo(id);
+        }
     }
 }
