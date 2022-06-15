@@ -78,7 +78,8 @@ public class ViewController {
 
     private void update() throws SQLException {
         updateSQLStatement();
-        if (!statement.contains("SELECT FROM")) {
+        System.out.println(statement);
+        if (!statement.contains("SELEC FROM")) { // because of strip string
             result = db.executeStatement(statement);
             result.next();
         }
@@ -100,7 +101,7 @@ public class ViewController {
         updateLabelString(hBoxLevel, labelLevel, checkBoxFloorLevel, "room_floor");
         updateLabelInt(hBoxRoomSize, labelRoomSize, checkBoxRoomSize, "size");
 
-        hBoxDepartment.setVisible(checkBoxRoomSize.isSelected() || checkBoxRoomNr.isSelected() || checkBoxFloorLevel.isSelected());
+        hBoxDepartment.setVisible(checkBoxRoomSize.isSelected() || checkBoxRoomNr.isSelected() || checkBoxFloorLevel.isSelected() || checkBoxDepartment.isSelected());
         
     }
 
