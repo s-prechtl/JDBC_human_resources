@@ -1,6 +1,7 @@
 package us.insy.jdbc_human_resources;
 
 import javafx.event.ActionEvent;
+import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -17,34 +18,45 @@ import java.util.Collection;
 
 public class MainController {
     public HBox hBoxMainArea;
+    public Menu view;
 
     public void initialize() throws IOException {
         setSceneOnPane("view-view.fxml");
     }
 
     @FXML
-    private void onMenuViewClicked(ActionEvent e) throws IOException {
+    private void onMenuViewOpen(ActionEvent e) throws IOException {
         setSceneOnPane("view-view.fxml");
     }
 
     @FXML
-    private void onMenuEditClicked() {
+    private void onMenuEditClicked() throws IOException {
+        setSceneOnPane("edit-view.fxml");
     }
 
     @FXML
-    private void onMenuAddClicked() {
+    private void onMenuAddClicked() throws IOException {
+        setSceneOnPane("add.fxml");
+    }
+
+
+
+    public void onMenuEditOpen(ActionEvent actionEvent) {
+    }
+
+    public void onMenuAddOpen(ActionEvent actionEvent) {
+    }
+
+
+    public void onMenuClose(ActionEvent actionEvent) {
+        hBoxMainArea.getChildren().clear();
     }
 
     private void setSceneOnPane(String fileName) throws IOException {
-//        FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource(fileName));
-//        Scene scene = new Scene(fxmlLoader.load());
-//        scene.getStylesheets().add(BootstrapFX.bootstrapFXStylesheet());
-//        paneFXView.getChildren()
         hBoxMainArea.getChildren().clear();
         URL u = MainApplication.class.getResource(fileName);
         assert u != null;
         Pane pane = FXMLLoader.load(u);
         hBoxMainArea.getChildren().add(pane);
-
     }
 }
