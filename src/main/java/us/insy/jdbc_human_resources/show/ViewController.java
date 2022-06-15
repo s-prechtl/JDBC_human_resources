@@ -93,9 +93,9 @@ public class ViewController {
         updateLabelString(hBoxBirthDate, labelBirthDate, checkBoxBirthDate, "date_of_birth");
         updateLabelString(hBoxEmail, labelEmail, checkBoxEmail, "email");
         updateLabelInt(hBoxSalary, labelSalary, checkBoxSalary, "salary");
-        updateLabelString(hBoxCity, labelCity, checkBoxLivingIn, "name");
+        updateLabelString(hBoxCity, labelCity, checkBoxLivingIn, "cname"); // Mocht am den schas
         updateLabelString(hBoxZip, labelZipCode, checkBoxZipCode, "zip");
-        updateLabelString(hBoxDepName, labelDepartmentName, checkBoxDepartment, "name");
+        updateLabelString(hBoxDepName, labelDepartmentName, checkBoxDepartment, "dpName"); //TODO: Wie
         updateLabelInt(hBoxRoomNr, labelRoomNumber, checkBoxRoomNr, "room_nr");
         updateLabelString(hBoxLevel, labelLevel, checkBoxFloorLevel, "room_floor");
         updateLabelInt(hBoxRoomSize, labelRoomSize, checkBoxRoomSize, "size");
@@ -142,7 +142,7 @@ public class ViewController {
             statement += "hr.zip, ";
         }
         if (checkBoxDepartment.isSelected()) {
-            statement += "hr.department_id, ";
+            statement += "dp.name AS dpName, ";
         }
         if (checkBoxRoomSize.isSelected()) {
             statement += "room.size, ";
@@ -151,7 +151,7 @@ public class ViewController {
             statement += "salary, ";
         }
         if (checkBoxLivingIn.isSelected()) {
-            statement += "city.name, ";
+            statement += "city.name AS cname, ";
         }
         if (checkBoxRoomNr.isSelected()) {
             statement += "hroom.room_nr, ";
@@ -178,9 +178,9 @@ public class ViewController {
         }
 
         if (checkBoxDepartment.isSelected()) {
-            statement += "INNER JOIN t_department dp ON hr.department_id=dp.department_id";
+            statement += "INNER JOIN t_department dp ON hr.department_id=dp.department_id ";
         }
-        statement += ";";
+        statement += "ORDER BY hr.person_id;";
     }
 
     public void onCheckBoxClicked() throws SQLException {
@@ -199,7 +199,12 @@ public class ViewController {
     public void onPreviousClicked() throws SQLException {
         int id = Integer.parseInt(labelID.getText()) - 1;
         if (id < 1) {
-            id = result.getInt("person_id");
+            update();
+            while (result.next()){
+                if (result.isLast()){
+                    id = result.getInt("person_id");
+                }
+            }
         }
         jumpTo(id);
     }
