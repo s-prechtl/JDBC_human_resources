@@ -78,7 +78,6 @@ public class ViewController {
 
     private void update() throws SQLException {
         updateSQLStatement();
-        System.out.println(statement);
         if (!statement.contains("SELEC FROM")) { // because of strip string
             result = db.executeStatement(statement);
             result.next();
