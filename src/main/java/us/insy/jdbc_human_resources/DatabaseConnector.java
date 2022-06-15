@@ -2,38 +2,39 @@ package us.insy.jdbc_human_resources;
 
 import java.sql.*;
 
-public class DatabaseConnector {
+public class DatabaseConnector{
     // wunderhübsches Singleton, Prachi gönn Plus
     private static DatabaseConnector instance;
-    public static DatabaseConnector getInstance () {
-    if (instance == null) {
-        instance = new DatabaseConnector();
+
+    public static DatabaseConnector getInstance(){
+        if(instance == null){
+            instance = new DatabaseConnector();
+        }
+        return instance;
     }
-    return instance;
-}
 
 
     static final String dbUrl = "jdbc:postgresql://xserv:5432/dhain";
     private Connection connection;
 
-    private DatabaseConnector() {
+    private DatabaseConnector(){
         startConnection();
     }
 
-    private void startConnection() {
-        try {
+    private void startConnection(){
+        try{
             connection = DriverManager.getConnection(dbUrl, MainApplication.user, MainApplication.pass);
-        } catch (SQLException e) {
+        } catch(SQLException e){
             throw new RuntimeException(e);
         }
     }
 
-    public ResultSet executeStatement(String statementString) {
+    public ResultSet executeStatement(String statementString){
         ResultSet resultSet = null;
-        try {
+        try{
             Statement statement = connection.createStatement();
             resultSet = statement.executeQuery(statementString);
-        } catch (SQLException e) {
+        } catch(SQLException e){
             throw new RuntimeException(e);
         }
         return resultSet;
