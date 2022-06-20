@@ -6,9 +6,9 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox alignment="TOP_CENTER" prefHeight="426.0" prefWidth="405.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="us.insy.jdbc_human_resources.MainController">
+<VBox alignment="TOP_CENTER" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="us.insy.jdbc_human_resources.MainController">
    <children>
-      <MenuBar>
+      <MenuBar VBox.vgrow="ALWAYS">
         <menus>
           <Menu mnemonicParsing="false" text="View">
                <items>
@@ -27,6 +27,6 @@
                </items></Menu>
         </menus>
       </MenuBar>
-      <HBox fx:id="hBoxMainArea" maxWidth="1.7976931348623157E308" prefHeight="0.0" VBox.vgrow="ALWAYS" />
+      <HBox fx:id="hBoxMainArea" VBox.vgrow="ALWAYS" />
    </children>
 </VBox>
