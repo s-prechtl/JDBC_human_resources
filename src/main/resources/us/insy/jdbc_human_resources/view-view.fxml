@@ -3,169 +3,177 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Spinner?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="us.insy.jdbc_human_resources.show.ViewController">
-   <children>
-      <VBox alignment="CENTER" prefWidth="100.0" spacing="30.0" VBox.vgrow="ALWAYS">
-         <children>
-            <HBox alignment="CENTER" spacing="10.0" VBox.vgrow="ALWAYS">
-               <VBox.margin>
+<VBox minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="us.insy.jdbc_human_resources.show.ViewController">
+    <children>
+        <VBox alignment="CENTER" spacing="30.0" VBox.vgrow="ALWAYS">
+            <children>
+                <HBox alignment="CENTER" spacing="10.0" VBox.vgrow="ALWAYS">
+                    <VBox.margin>
+                        <Insets />
+                    </VBox.margin>
+                    <children>
+                        <CheckBox fx:id="checkBoxPersID" mnemonicParsing="false" onAction="#onCheckBoxClicked" selected="true" text="Pers. ID" HBox.hgrow="ALWAYS" />
+                        <CheckBox fx:id="checkBoxFirstName" mnemonicParsing="false" onAction="#onCheckBoxClicked" selected="true" text="Vorname" HBox.hgrow="ALWAYS" />
+                        <CheckBox fx:id="checkBoxLastname" mnemonicParsing="false" onAction="#onCheckBoxClicked" selected="true" text="Nachname" HBox.hgrow="ALWAYS" />
+                        <CheckBox fx:id="checkBoxGender" mnemonicParsing="false" onAction="#onCheckBoxClicked" selected="true" text="Geschlecht" HBox.hgrow="ALWAYS" />
+                        <CheckBox fx:id="checkBoxEmail" mnemonicParsing="false" onAction="#onCheckBoxClicked" selected="true" text="E-Mail" HBox.hgrow="ALWAYS" />
+                        <CheckBox fx:id="checkBoxBirthDate" mnemonicParsing="false" onAction="#onCheckBoxClicked" selected="true" text="Geb. Datum" HBox.hgrow="ALWAYS" />
+                        <CheckBox fx:id="checkBoxSalary" mnemonicParsing="false" onAction="#onCheckBoxClicked" selected="true" text="Gehalt" HBox.hgrow="ALWAYS" />
+                    </children>
+                </HBox>
+                <HBox alignment="CENTER" spacing="20.0" VBox.vgrow="ALWAYS">
+                    <children>
+                        <CheckBox fx:id="checkBoxLivingIn" mnemonicParsing="false" onAction="#onCheckBoxClicked" selected="true" text="Wohnort" HBox.hgrow="ALWAYS" />
+                        <CheckBox fx:id="checkBoxZipCode" mnemonicParsing="false" onAction="#onCheckBoxClicked" selected="true" text="PLZ" HBox.hgrow="ALWAYS" />
+                        <CheckBox fx:id="checkBoxDepartment" mnemonicParsing="false" onAction="#onCheckBoxClicked" selected="true" text="Abteilung" HBox.hgrow="ALWAYS" />
+                        <CheckBox fx:id="checkBoxRoomNr" mnemonicParsing="false" onAction="#onCheckBoxClicked" selected="true" text="Raumnummer" HBox.hgrow="ALWAYS" />
+                        <CheckBox fx:id="checkBoxFloorLevel" mnemonicParsing="false" onAction="#onCheckBoxClicked" selected="true" text="Stock" HBox.hgrow="ALWAYS" />
+                        <CheckBox fx:id="checkBoxRoomSize" mnemonicParsing="false" onAction="#onCheckBoxClicked" selected="true" text="Raumgröße" HBox.hgrow="ALWAYS" />
+                    </children>
+                </HBox>
+            </children>
+            <VBox.margin>
+                <Insets bottom="30.0" top="30.0" />
+            </VBox.margin>
+        </VBox>
+        <HBox fx:id="hBoxID" alignment="CENTER" spacing="50.0" VBox.vgrow="ALWAYS">
+            <children>
+                <Label alignment="CENTER" text="ID" HBox.hgrow="ALWAYS" />
+                <Label fx:id="labelID" alignment="CENTER" text="Hir ID" textAlignment="CENTER" HBox.hgrow="ALWAYS" />
+            </children>
+        </HBox>
+        <HBox fx:id="hBoxFirstname" alignment="CENTER" prefWidth="200.0" spacing="50.0" VBox.vgrow="ALWAYS">
+            <children>
+                <Label alignment="CENTER" text="Vorname" HBox.hgrow="ALWAYS" />
+                <Label fx:id="labelFirstName" alignment="CENTER" text="Hir vornam" textAlignment="CENTER" HBox.hgrow="ALWAYS" />
+            </children>
+        </HBox>
+        <HBox fx:id="hBoxLastname" alignment="CENTER" maxHeight="-Infinity" prefWidth="200.0" spacing="50.0" VBox.vgrow="ALWAYS">
+            <children>
+                <Label alignment="CENTER" text="Nachname" HBox.hgrow="ALWAYS" />
+                <Label fx:id="labelLastName" alignment="CENTER" text="Hir nachname" textAlignment="CENTER" HBox.hgrow="ALWAYS" />
+            </children>
+        </HBox>
+        <HBox fx:id="hBoxGender" alignment="CENTER" spacing="50.0" VBox.vgrow="ALWAYS">
+            <children>
+                <Label alignment="CENTER" text="Geschlecht" HBox.hgrow="ALWAYS" />
+                <Label fx:id="labelGender" alignment="CENTER" text="Hir ID" textAlignment="CENTER" HBox.hgrow="ALWAYS" />
+            </children>
+        </HBox>
+        <HBox fx:id="hBoxEmail" alignment="CENTER" spacing="50.0" VBox.vgrow="ALWAYS">
+            <children>
+                <Label alignment="CENTER" text="Email" HBox.hgrow="ALWAYS" />
+                <Label fx:id="labelEmail" alignment="CENTER" text="Hir email" textAlignment="CENTER" HBox.hgrow="ALWAYS" />
+            </children>
+        </HBox>
+        <HBox fx:id="hBoxBirthDate" alignment="CENTER" spacing="50.0" VBox.vgrow="ALWAYS">
+            <children>
+                <Label alignment="CENTER" text="Geburtsdatum" HBox.hgrow="ALWAYS" />
+                <Label fx:id="labelBirthDate" alignment="CENTER" text="Hir geb dat" textAlignment="CENTER" HBox.hgrow="ALWAYS" />
+            </children>
+        </HBox>
+        <HBox fx:id="hBoxSalary" alignment="CENTER" spacing="50.0" VBox.vgrow="ALWAYS">
+            <children>
+                <Label alignment="CENTER" text="Gehalt" HBox.hgrow="ALWAYS" />
+                <Label fx:id="labelSalary" alignment="CENTER" text="Hir Gehalt" textAlignment="CENTER" HBox.hgrow="ALWAYS" />
+            </children>
+        </HBox>
+        <HBox fx:id="hBoxLiving" alignment="CENTER" spacing="50.0" VBox.vgrow="ALWAYS">
+            <children>
+                <Label alignment="CENTER" text="Wohnort" textAlignment="CENTER">
+               <HBox.margin>
                   <Insets />
-               </VBox.margin>
-               <children>
-                  <CheckBox fx:id="checkBoxPersID" mnemonicParsing="false" onAction="#onCheckBoxClicked" prefHeight="17.0" prefWidth="68.0" selected="true" text="Pers. ID" HBox.hgrow="ALWAYS" />
-                  <CheckBox fx:id="checkBoxFirstName" mnemonicParsing="false" onAction="#onCheckBoxClicked" prefHeight="17.0" prefWidth="75.0" selected="true" text="Vorname" HBox.hgrow="ALWAYS" />
-                  <CheckBox fx:id="checkBoxLastname" mnemonicParsing="false" onAction="#onCheckBoxClicked" prefHeight="17.0" prefWidth="83.0" selected="true" text="Nachname" HBox.hgrow="ALWAYS" />
-                  <CheckBox fx:id="checkBoxGender" mnemonicParsing="false" onAction="#onCheckBoxClicked" prefHeight="17.0" prefWidth="87.0" selected="true" text="Geschlecht" HBox.hgrow="ALWAYS" />
-                  <CheckBox fx:id="checkBoxEmail" mnemonicParsing="false" onAction="#onCheckBoxClicked" selected="true" text="E-Mail" HBox.hgrow="ALWAYS" />
-                  <CheckBox fx:id="checkBoxBirthDate" mnemonicParsing="false" onAction="#onCheckBoxClicked" selected="true" text="Geb. Datum" HBox.hgrow="ALWAYS" />
-                  <CheckBox fx:id="checkBoxSalary" mnemonicParsing="false" onAction="#onCheckBoxClicked" selected="true" text="Gehalt" HBox.hgrow="ALWAYS" />
-               </children>
-            </HBox>
-            <HBox alignment="CENTER" spacing="20.0" VBox.vgrow="ALWAYS">
-               <children>
-                  <CheckBox fx:id="checkBoxLivingIn" mnemonicParsing="false" onAction="#onCheckBoxClicked" selected="true" text="Wohnort" HBox.hgrow="ALWAYS" />
-                  <CheckBox fx:id="checkBoxZipCode" mnemonicParsing="false" onAction="#onCheckBoxClicked" selected="true" text="PLZ" HBox.hgrow="ALWAYS" />
-                  <CheckBox fx:id="checkBoxDepartment" mnemonicParsing="false" onAction="#onCheckBoxClicked" selected="true" text="Abteilung" HBox.hgrow="ALWAYS" />
-                  <CheckBox fx:id="checkBoxRoomNr" mnemonicParsing="false" onAction="#onCheckBoxClicked" selected="true" text="Raumnummer" HBox.hgrow="ALWAYS" />
-                  <CheckBox fx:id="checkBoxFloorLevel" mnemonicParsing="false" onAction="#onCheckBoxClicked" selected="true" text="Stock" HBox.hgrow="ALWAYS" />
-                  <CheckBox fx:id="checkBoxRoomSize" mnemonicParsing="false" onAction="#onCheckBoxClicked" selected="true" text="Raumgröße" HBox.hgrow="ALWAYS" />
-               </children>
-            </HBox>
-         </children>
+               </HBox.margin></Label>
+                <VBox alignment="CENTER">
+                    <children>
+                        <HBox fx:id="hBoxCity" alignment="CENTER" spacing="50.0">
+                            <children>
+                                <Label alignment="CENTER" text="Ort" HBox.hgrow="ALWAYS" />
+                                <Label fx:id="labelCity" alignment="CENTER" text="Hir Ort" textAlignment="CENTER" HBox.hgrow="ALWAYS" />
+                            </children>
+                        </HBox>
+                        <HBox fx:id="hBoxZip" alignment="CENTER" spacing="50.0">
+                            <children>
+                                <Label alignment="CENTER" text="PLZ" HBox.hgrow="ALWAYS" />
+                                <Label fx:id="labelZipCode" alignment="CENTER" text="Hir Plz" textAlignment="CENTER" HBox.hgrow="ALWAYS" />
+                            </children>
+                        </HBox>
+                    </children>
+                </VBox>
+            </children>
+        </HBox>
+        <HBox fx:id="hBoxDepartment" alignment="CENTER" spacing="50.0" VBox.vgrow="ALWAYS">
+            <children>
+                <Label alignment="CENTER" text="Abteilung" HBox.hgrow="ALWAYS">
+                    <HBox.margin>
+                        <Insets />
+                    </HBox.margin>
+                </Label>
+                <VBox alignment="CENTER">
+                    <children>
+                        <HBox fx:id="hBoxDepName" alignment="CENTER" spacing="50.0" VBox.vgrow="ALWAYS">
+                            <children>
+                                <Label alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Abteilungsname" HBox.hgrow="ALWAYS" />
+                                <Label fx:id="labelDepartmentName" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Hir abt name" textAlignment="CENTER" HBox.hgrow="ALWAYS" />
+                            </children>
+                        </HBox>
+                        <HBox fx:id="hBoxLevel" alignment="CENTER" spacing="50.0" VBox.vgrow="ALWAYS">
+                            <children>
+                                <Label alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Stock" HBox.hgrow="ALWAYS" />
+                                <Label fx:id="labelLevel" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Hir Stock" textAlignment="CENTER" HBox.hgrow="ALWAYS" />
+                            </children>
+                        </HBox>
+                        <HBox fx:id="hBoxRoomNr" alignment="CENTER" spacing="50.0" VBox.vgrow="ALWAYS">
+                            <children>
+                                <Label alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Raum Nr." HBox.hgrow="ALWAYS" />
+                                <Label fx:id="labelRoomNumber" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Hir Raum nr" textAlignment="CENTER" HBox.hgrow="ALWAYS" />
+                            </children>
+                        </HBox>
+                        <HBox fx:id="hBoxRoomSize" alignment="CENTER" spacing="50.0" VBox.vgrow="ALWAYS">
+                            <children>
+                                <Label alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Raum Gr." HBox.hgrow="ALWAYS" />
+                                <Label fx:id="labelRoomSize" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Hir gr" textAlignment="CENTER" HBox.hgrow="ALWAYS" />
+                            </children>
+                        </HBox>
+                    </children>
+                </VBox>
+            </children>
+            <VBox.margin>
+                <Insets />
+            </VBox.margin>
+            <padding>
+                <Insets left="20.0" right="20.0" />
+            </padding>
+        </HBox>
+        <HBox alignment="CENTER" spacing="50.0" VBox.vgrow="ALWAYS">
+            <children>
+                <Button alignment="CENTER" mnemonicParsing="false" onAction="#onPreviousClicked" text="Previous" HBox.hgrow="ALWAYS">
+                    <HBox.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                    </HBox.margin>
+                </Button>
+                <Button alignment="CENTER" mnemonicParsing="false" onAction="#onButtonNextClicked" text="Next" HBox.hgrow="ALWAYS">
+                    <HBox.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                    </HBox.margin>
+                </Button>
+                <Spinner fx:id="spinnerID" editable="true" />
+                <Button alignment="CENTER" mnemonicParsing="false" onAction="#onJumpToClicked" text="Jump to" HBox.hgrow="ALWAYS">
+                    <HBox.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                    </HBox.margin>
+                </Button>
+            <ComboBox fx:id="comboBoxDepartment" onAction="#onComboBoxDepartmentChanged" />
+            </children>
          <VBox.margin>
             <Insets bottom="30.0" top="30.0" />
          </VBox.margin>
-      </VBox>
-      <HBox fx:id="hBoxID" alignment="CENTER" spacing="50.0" VBox.vgrow="ALWAYS">
-         <children>
-            <Label alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="ID" HBox.hgrow="ALWAYS" />
-            <Label fx:id="labelID" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Hir ID" textAlignment="CENTER" HBox.hgrow="ALWAYS" />
-         </children>
-      </HBox>
-      <HBox fx:id="hBoxFirstname" alignment="CENTER" prefWidth="200.0" spacing="50.0" VBox.vgrow="ALWAYS">
-         <children>
-            <Label alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Vorname" HBox.hgrow="ALWAYS" />
-            <Label fx:id="labelFirstName" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Hir vornam" textAlignment="CENTER" HBox.hgrow="ALWAYS" />
-         </children>
-      </HBox>
-      <HBox fx:id="hBoxLastname" alignment="CENTER" maxHeight="-Infinity" prefWidth="200.0" spacing="50.0" VBox.vgrow="ALWAYS">
-         <children>
-            <Label alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Nachname" HBox.hgrow="ALWAYS" />
-            <Label fx:id="labelLastName" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Hir nachname" textAlignment="CENTER" HBox.hgrow="ALWAYS" />
-         </children>
-      </HBox>
-      <HBox fx:id="hBoxGender" alignment="CENTER" spacing="50.0" VBox.vgrow="ALWAYS">
-         <children>
-            <Label alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Geschlecht" HBox.hgrow="ALWAYS" />
-            <Label fx:id="labelGender" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Hir ID" textAlignment="CENTER" HBox.hgrow="ALWAYS" />
-         </children>
-      </HBox>
-      <HBox fx:id="hBoxEmail" alignment="CENTER" spacing="50.0" VBox.vgrow="ALWAYS">
-         <children>
-            <Label alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Email" HBox.hgrow="ALWAYS" />
-            <Label fx:id="labelEmail" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Hir email" textAlignment="CENTER" HBox.hgrow="ALWAYS" />
-         </children>
-      </HBox>
-      <HBox fx:id="hBoxBirthDate" alignment="CENTER" spacing="50.0" VBox.vgrow="ALWAYS">
-         <children>
-            <Label alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Geburtsdatum" HBox.hgrow="ALWAYS" />
-            <Label fx:id="labelBirthDate" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Hir geb dat" textAlignment="CENTER" HBox.hgrow="ALWAYS" />
-         </children>
-      </HBox>
-      <HBox fx:id="hBoxSalary" alignment="CENTER" spacing="50.0" VBox.vgrow="ALWAYS">
-         <children>
-            <Label alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Gehalt" HBox.hgrow="ALWAYS" />
-            <Label fx:id="labelSalary" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Hir Gehalt" textAlignment="CENTER" HBox.hgrow="ALWAYS" />
-         </children>
-      </HBox>
-      <HBox fx:id="hBoxLiving" alignment="CENTER" spacing="50.0" VBox.vgrow="ALWAYS">
-         <children>
-            <Label alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Wohnort" textAlignment="CENTER" HBox.hgrow="ALWAYS" />
-            <VBox alignment="CENTER" HBox.hgrow="ALWAYS">
-               <children>
-                  <HBox fx:id="hBoxCity" alignment="CENTER" spacing="50.0" VBox.vgrow="ALWAYS">
-                     <children>
-                        <Label alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Ort" HBox.hgrow="ALWAYS" />
-                        <Label fx:id="labelCity" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Hir Ort" textAlignment="CENTER" HBox.hgrow="ALWAYS" />
-                     </children>
-                  </HBox>
-                  <HBox fx:id="hBoxZip" alignment="CENTER" spacing="50.0" VBox.vgrow="ALWAYS">
-                     <children>
-                        <Label alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="PLZ" HBox.hgrow="ALWAYS" />
-                        <Label fx:id="labelZipCode" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Hir Plz" textAlignment="CENTER" HBox.hgrow="ALWAYS" />
-                     </children>
-                  </HBox>
-               </children>
-            </VBox>
-         </children>
-      </HBox>
-      <HBox fx:id="hBoxDepartment" alignment="CENTER" spacing="50.0" VBox.vgrow="ALWAYS">
-         <children>
-            <Label alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Abteilung" HBox.hgrow="ALWAYS">
-               <HBox.margin>
-                  <Insets />
-               </HBox.margin>
-            </Label>
-            <VBox alignment="CENTER">
-               <children>
-                  <HBox fx:id="hBoxDepName" alignment="CENTER" spacing="50.0" VBox.vgrow="ALWAYS">
-                     <children>
-                        <Label alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Abteilungsname" HBox.hgrow="ALWAYS" />
-                        <Label fx:id="labelDepartmentName" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Hir abt name" textAlignment="CENTER" HBox.hgrow="ALWAYS" />
-                     </children>
-                  </HBox>
-                  <HBox fx:id="hBoxLevel" alignment="CENTER" spacing="50.0" VBox.vgrow="ALWAYS">
-                     <children>
-                        <Label alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Stock" HBox.hgrow="ALWAYS" />
-                        <Label fx:id="labelLevel" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Hir Stock" textAlignment="CENTER" HBox.hgrow="ALWAYS" />
-                     </children>
-                  </HBox>
-                  <HBox fx:id="hBoxRoomNr" alignment="CENTER" spacing="50.0" VBox.vgrow="ALWAYS">
-                     <children>
-                        <Label alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Raum Nr." HBox.hgrow="ALWAYS" />
-                        <Label fx:id="labelRoomNumber" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Hir Raum nr" textAlignment="CENTER" HBox.hgrow="ALWAYS" />
-                     </children>
-                  </HBox>
-                  <HBox fx:id="hBoxRoomSize" alignment="CENTER" spacing="50.0" VBox.vgrow="ALWAYS">
-                     <children>
-                        <Label alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Raum Gr." HBox.hgrow="ALWAYS" />
-                        <Label fx:id="labelRoomSize" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Hir gr" textAlignment="CENTER" HBox.hgrow="ALWAYS" />
-                     </children>
-                  </HBox>
-               </children>
-            </VBox>
-         </children>
-         <VBox.margin>
-            <Insets />
-         </VBox.margin>
-         <padding>
-            <Insets left="20.0" right="20.0" />
-         </padding>
-      </HBox>
-      <HBox alignment="CENTER" spacing="50.0">
-         <children>
-            <Button alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#onPreviousClicked" text="Previous" HBox.hgrow="ALWAYS">
-               <HBox.margin>
-                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-               </HBox.margin>
-            </Button>
-            <Button alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#onButtonNextClicked" text="Next" HBox.hgrow="ALWAYS">
-               <HBox.margin>
-                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-               </HBox.margin>
-            </Button>
-            <Spinner fx:id="spinnerID" editable="true" />
-            <Button alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#onJumpToClicked" text="Jump to" HBox.hgrow="ALWAYS">
-               <HBox.margin>
-                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-               </HBox.margin>
-            </Button>
-         </children>
-      </HBox>
-   </children>
+        </HBox>
+    </children>
 </VBox>

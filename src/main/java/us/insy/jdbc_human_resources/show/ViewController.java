@@ -4,16 +4,15 @@ package us.insy.jdbc_human_resources.show;
  *           Fachrichtung Elektronik und Technische Informatik
  *----------------------------------------------------------------------------*/
 
+import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.Spinner;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import us.insy.jdbc_human_resources.DatabaseConnector;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 /**
  * Kurzbeschreibung
@@ -67,22 +66,44 @@ public class ViewController {
     public HBox hBoxLevel;
     public HBox hBoxRoomNr;
     public HBox hBoxRoomSize;
-    public Spinner spinnerID;
+    public Spinner<Integer> spinnerID;
+    public ComboBox comboBoxDepartment;
 
     private String statement;
     private ResultSet result;
 
+    private int idForSpinner = -1;
+    private String valueForComboBox = "All";
+
     public void initialize() throws SQLException {
         update();
+        updateComboBoxList();
     }
 
     private void update() throws SQLException {
         updateSQLStatement();
         if (!statement.contains("SELEC FROM")) { // because of strip string
             result = db.executeStatement(statement);
+            while (result.next() && !result.isLast());
+            spinnerID.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, result.getRow()));
+            result = db.executeStatement(statement);
             result.next();
         }
         updateLabels();
+        if (idForSpinner !=  -1) {
+            spinnerID.getValueFactory().setValue(idForSpinner);
+        }
+    }
+
+    private void updateComboBoxList() throws SQLException {
+        ResultSet departmentList = db.executeStatement("SELECT name FROM t_department;");
+        ArrayList<String> dpList = new ArrayList<>();
+        dpList.add("All");
+        while (departmentList.next()){
+            dpList.add(departmentList.getString("name"));
+        }
+        comboBoxDepartment.setItems(FXCollections.observableList(dpList));
+        comboBoxDepartment.setValue(valueForComboBox);
     }
 
     private void updateLabels() throws SQLException {
@@ -93,13 +114,14 @@ public class ViewController {
         updateLabelString(hBoxBirthDate, labelBirthDate, checkBoxBirthDate, "date_of_birth");
         updateLabelString(hBoxEmail, labelEmail, checkBoxEmail, "email");
         updateLabelInt(hBoxSalary, labelSalary, checkBoxSalary, "salary");
-        updateLabelString(hBoxCity, labelCity, checkBoxLivingIn, "cname"); // Mocht am den schas
+        updateLabelString(hBoxCity, labelCity, checkBoxLivingIn, "cname");
         updateLabelString(hBoxZip, labelZipCode, checkBoxZipCode, "zip");
-        updateLabelString(hBoxDepName, labelDepartmentName, checkBoxDepartment, "dpName"); //TODO: Wie
+        updateLabelString(hBoxDepName, labelDepartmentName, checkBoxDepartment, "dpName");
         updateLabelInt(hBoxRoomNr, labelRoomNumber, checkBoxRoomNr, "room_nr");
         updateLabelString(hBoxLevel, labelLevel, checkBoxFloorLevel, "room_floor");
         updateLabelInt(hBoxRoomSize, labelRoomSize, checkBoxRoomSize, "size");
 
+        hBoxEmail.setVisible(result.getString("email") != null);
         hBoxDepartment.setVisible(checkBoxRoomSize.isSelected() || checkBoxRoomNr.isSelected() || checkBoxFloorLevel.isSelected() || checkBoxDepartment.isSelected());
         
     }
@@ -180,6 +202,11 @@ public class ViewController {
         if (checkBoxDepartment.isSelected()) {
             statement += "INNER JOIN t_department dp ON hr.department_id=dp.department_id ";
         }
+
+        if (comboBoxDepartment.getValue() != null && !comboBoxDepartment.getValue().toString().equals("All")){
+            statement += "WHERE dp.name='" + comboBoxDepartment.getValue() + "' ";
+        }
+
         statement += "ORDER BY hr.person_id;";
     }
 
@@ -187,18 +214,28 @@ public class ViewController {
         update();
     }
 
-    public void onButtonNextClicked(ActionEvent actionEvent) throws SQLException {
+    public void onButtonNextClicked() throws SQLException {
         int id = Integer.parseInt(labelID.getText()) + 1;
         if (result.isLast()) {
             update();
             id = 1;
         }
+        if (!valueForComboBox.equals("All")) {
+            update();
+            while (result.next()){
+                if (result.getInt("person_id") == id-1){
+                    result.next();
+                    break;
+                }
+            }
+        }
+
         jumpTo(id);
     }
 
     public void onPreviousClicked() throws SQLException {
         int id = Integer.parseInt(labelID.getText()) - 1;
-        if (id < 1) {
+        if (id < 1 || !valueForComboBox.equals("All")) {
             update();
             while (result.next()){
                 if (result.isLast()){
@@ -209,7 +246,8 @@ public class ViewController {
         jumpTo(id);
     }
 
-    private void jumpTo(int id) throws SQLException {
+    private void jumpTo(int id, boolean updateSpinnerID) throws SQLException {
+        if (updateSpinnerID) idForSpinner = spinnerID.getValue() + ((id<Integer.parseInt(labelID.getText()))?-1:+1);
         update();
         while (result.next()) {
             if (result.getInt("person_id") == id) {
@@ -219,10 +257,24 @@ public class ViewController {
         }
     }
 
+    private void jumpTo(int id) throws SQLException {
+        jumpTo(id, true);
+    }
+
     public void onJumpToClicked() throws SQLException {
         if (spinnerID.getValue() != null) {
-            int id = (int) spinnerID.getValue();
-            jumpTo(id);
+            idForSpinner = spinnerID.getValue();
+            update();
+            for (int i = 1; i < spinnerID.getValue(); i++){ //converts number of object to id of result object
+                result.next();
+            }
+            int id = result.getInt("person_id");
+            jumpTo(id, false);
         }
+    }
+
+    public void onComboBoxDepartmentChanged() throws SQLException {
+        valueForComboBox = (String) comboBoxDepartment.getValue();
+        update();
     }
 }
