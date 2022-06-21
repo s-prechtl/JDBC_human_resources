@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.Group?>
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
@@ -10,34 +10,53 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
+<VBox alignment="CENTER" prefHeight="534.0" prefWidth="490.0" spacing="10.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="us.insy.jdbc_human_resources.add.AddController">
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="536.0" prefWidth="600.0" spacing="5.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1">
-   <children>
-      <Label text="Vorname" />
-      <TextField fx:id="textFieldFirstName" />
-      <Label text="Nachname" />
-      <TextField fx:id="textFieldLastName" />
-      <Label text="E-Mail" />
-      <TextField fx:id="textFieldEmail" layoutX="10.0" layoutY="61.0" />
-      <Label text="Geburtsdatum" />
-      <DatePicker fx:id="datePickerBirthDate" />
-      <Label text="Geschlecht" />
-      <Group fx:id="groupGender" />
-      <Label text="Gehalt" />
-      <TextField fx:id="textFieldSalary" />
-      <Label text="Wohnort" />
-      <ComboBox fx:id="comboBoxLivingIn" prefWidth="150.0" />
-      <Label text="Abteilung" />
-      <ComboBox fx:id="comboBoxDepartment" prefWidth="150.0" />
-      <Label text="Raum" />
-      <HBox prefHeight="100.0" prefWidth="200.0">
-         <children>
-            <Spinner fx:id="spinnerRommNumber" />
-            <Group fx:id="groupFloor" />
-         </children>
-      </HBox>
-   </children>
-   <padding>
-      <Insets bottom="30.0" left="30.0" right="30.0" top="30.0" />
-   </padding>
+    <padding>
+        <Insets bottom="30.0" left="30.0" right="30.0" top="30.0" />
+    </padding>
+    <VBox prefWidth="100.0">
+        <Label text="Vorname"/>
+        <TextField fx:id="textFieldFirstName"/>
+    </VBox>
+    <VBox prefWidth="100.0">
+        <Label text="Nachname"/>
+        <TextField fx:id="textFieldLastName"/>
+    </VBox>
+    <VBox prefWidth="100.0">
+        <Label text="E-Mail"/>
+        <TextField fx:id="textFieldEmail"/>
+    </VBox>
+    <VBox prefWidth="100.0">
+        <Label text="Geburtsdatum"/>
+        <DatePicker fx:id="datePickerBirthDate" prefHeight="25.0" prefWidth="200.0"/>
+    </VBox>
+    <VBox prefWidth="100.0">
+        <Label text="Geschlecht"/>
+        <HBox fx:id="hBoxGender" spacing="5.0"/>
+    </VBox>
+    <VBox prefWidth="100.0">
+        <Label text="Gehalt"/>
+        <TextField fx:id="textFieldSalary"/>
+    </VBox>
+    <VBox prefWidth="100.0">
+        <Label text="Wohnort"/>
+        <ComboBox fx:id="comboBoxLivingIn" prefHeight="25.0" prefWidth="200.0"/>
+    </VBox>
+    <VBox prefWidth="100.0">
+        <Label text="Abteilung"/>
+        <ComboBox fx:id="comboBoxDepartment" prefWidth="200.0"/>
+    </VBox>
+    <VBox prefWidth="100.0">
+        <Label text="Raum"/>
+        <HBox prefWidth="200.0" spacing="5.0">
+            <Spinner fx:id="spinnerRoomNumber" editable="true" prefHeight="25.0"/>
+            <HBox fx:id="hBoxFloor" spacing="5.0"/>
+        </HBox>
+    </VBox>
+    <HBox alignment="TOP_RIGHT" prefWidth="200.0" spacing="5.0">
+        <Button fx:id="buttonReload" mnemonicParsing="false" onAction="#reload" text="Reload" />
+        <Button fx:id="buttonAdd" mnemonicParsing="false" onAction="#add" text="Add" />
+    </HBox>
+
 </VBox>

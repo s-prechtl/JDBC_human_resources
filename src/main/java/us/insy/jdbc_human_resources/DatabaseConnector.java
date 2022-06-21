@@ -13,7 +13,7 @@ public class DatabaseConnector {
 }
 
 
-    static final String dbUrl = "jdbc:postgresql://xserv:5432/dhain";
+    static final String dbUrl = "jdbc:postgresql://localhost:5432/dhain";
     private Connection connection;
 
     private DatabaseConnector() {
@@ -28,14 +28,10 @@ public class DatabaseConnector {
         }
     }
 
-    public ResultSet executeStatement(String statementString) {
-        ResultSet resultSet = null;
-        try {
-            Statement statement = connection.createStatement();
-            resultSet = statement.executeQuery(statementString);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+    public ResultSet executeStatement(String statementString) throws SQLException {
+        ResultSet resultSet;
+        Statement statement = connection.createStatement();
+        resultSet = statement.executeQuery(statementString);
         return resultSet;
     }
 

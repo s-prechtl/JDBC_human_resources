@@ -7,4 +7,7 @@ module us.insy.jdbc_human_resources {
 
     opens us.insy.jdbc_human_resources to javafx.fxml;
     exports us.insy.jdbc_human_resources;
+
+    exports us.insy.jdbc_human_resources.add;
+    opens us.insy.jdbc_human_resources.add to javafx.fxml;
 }
