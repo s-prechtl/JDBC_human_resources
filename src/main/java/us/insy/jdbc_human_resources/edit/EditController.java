@@ -4,11 +4,14 @@ package us.insy.jdbc_human_resources.edit;
  *           Fachrichtung Elektronik und Technische Informatik
  *----------------------------------------------------------------------------*/
 
+import javafx.collections.ObservableList;
 import javafx.scene.control.*;
+import javafx.scene.layout.HBox;
 import us.insy.jdbc_human_resources.DatabaseConnector;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 /**
  * @author David Hain
@@ -25,26 +28,36 @@ public class EditController{
     public Label labelZIP;
     public Label labelDepartment;
     public Spinner<Integer> spinnerRoomNumber;
+    public HBox hBoxRadioButtons;
+    private ArrayList<RadioButton> radioButtonsFloor = new ArrayList<>();
+    private final ToggleGroup toggleGroupFloor = new ToggleGroup();
+    public Spinner<Integer> spinnerPersonID;
 
     private final DatabaseConnector db = DatabaseConnector.getInstance();
     private String statement;
     private ResultSet result;
+    private int persID;
 
     public void initialize() throws SQLException{
-        spinnerRoomNumber.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 100));
+        ResultSet res = db.executeStatement("SELECT max(room_nr) FROM t_hr_room");
+        res.next();
+        spinnerRoomNumber.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, res.getInt("max")));
+        res = db.executeStatement("SELECT person_id FROM t_human_resources ORDER BY person_id");
+        res.next();
+        persID = res.getInt("person_id");
+
+        res = db.executeStatement("SELECT max(person_id) FROM t_human_resources");
+        res.next();
+        ResultSet minID = db.executeStatement("SELECT min(person_id) FROM t_human_resources");
+        minID.next();
+        spinnerPersonID.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(minID.getInt("min"), res.getInt("max")));
+        persID = minID.getInt("min");
+
         updateAll();
     }
 
     private void update(String what) throws SQLException{
         updateSQLStatement(what);
-        result = db.executeStatement(statement);
-        while(result.next() && !result.isLast()) ;
-        spinnerRoomNumber.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, result.getRow()));
-        result = db.executeStatement(statement);
-        result.next();
-    }
-
-    private void update() throws SQLException{
         result = db.executeStatement(statement);
         result.next();
     }
@@ -70,7 +83,22 @@ public class EditController{
         labelDepartment.setText(result.getString("department_name"));
         update("room_nr");
         spinnerRoomNumber.getValueFactory().setValue(result.getInt("room_nr"));
-        //TODO: room floor
+        updateRadioButtonsFloor();
+        spinnerPersonID.getValueFactory().setValue(result.getInt("person_id"));
+    }
+
+    private void updateRadioButtonsFloor() throws SQLException{
+        ResultSet tempResult = db.executeStatement("SELECT DISTINCT floor FROM t_room ORDER BY floor");
+        update("room_floor");
+        while(tempResult.next()){
+            RadioButton radioButton = new RadioButton(tempResult.getString("floor"));
+            radioButtonsFloor.add(radioButton);
+            toggleGroupFloor.getToggles().add(radioButton);
+            if(radioButton.getText().equals(result.getString("room_floor"))){
+                toggleGroupFloor.selectToggle(radioButton);
+            }
+        }
+        hBoxRadioButtons.getChildren().addAll(radioButtonsFloor);
     }
 
     private void updateSQLStatement(String what){
@@ -106,6 +134,9 @@ public class EditController{
         if(what.equals("room_nr")){
             statement += "room_nr, ";
         }
+        if(what.equals("room_floor")){
+            statement += "room_floor, ";
+        }
 
         statement = statement.substring(0, statement.length() - 2); //strip last comma
         statement += " FROM t_human_resources hr ";
@@ -119,8 +150,12 @@ public class EditController{
         if(what.equals("department_name")){
             statement += "INNER JOIN t_department dp ON hr.department_id=dp.department_id ";
         }
-        if(what.equals("room_nr")){
+        if(what.equals("room_nr") || what.equals("room_floor")){
             statement += "INNER JOIN t_hr_room hroom ON hr.person_id=hroom.person_id ";
+        }
+
+        if(persID > 0){
+            statement += "WHERE hr.person_id=" + persID + " ";
         }
 
         statement += "ORDER BY hr.person_id;";
@@ -130,15 +165,35 @@ public class EditController{
         float salary = Integer.parseInt(textFieldSalary.getText());
         int room_nr = spinnerRoomNumber.getValueFactory().getValue();
         int person_id = result.getInt("person_id");
-        //TODO: ROOM FLOOR
+        String room_floor = ((RadioButton) toggleGroupFloor.getSelectedToggle()).getText();
 
-        statement = "UPDATE t_salary SET salary=" + salary + " WHERE person_id=" + person_id;
-        db.executeStatementNoError(statement);
-        statement = "UPDATE t_hr_room SET room_nr=" + room_nr + " WHERE person_id=" + person_id;
-        db.executeStatementNoError(statement);
+        db.executeStatementNoError("UPDATE t_salary SET salary=" + salary + " WHERE person_id=" + person_id);
+        db.executeStatementNoError("UPDATE t_hr_room SET room_nr=" + room_nr + ", room_floor='" + room_floor + "' WHERE person_id=" + person_id);
     }
 
-    public void onButtonDeleteClicked(){
-        statement = "DELETE FROM t_hr_room WHERE person_id=";
+    public void onButtonDeleteClicked() throws SQLException{
+        int person_id = result.getInt("person_id");
+
+        db.executeStatementNoError("DELETE FROM t_salary WHERE person_id=" + person_id);
+        db.executeStatementNoError("DELETE FROM t_hr_room WHERE person_id=" + person_id);
+        db.executeStatementNoError("DELETE FROM t_human_resources WHERE person_id=" + person_id);
+    }
+
+    public void onButtonJumpToClicked() throws SQLException{
+        // if person_id in spinner does not exist in database => do nothing
+        int person_id = spinnerPersonID.getValueFactory().getValue();
+        ResultSet resultSet = db.executeStatement("SELECT person_id FROM t_human_resources");
+        ArrayList<Integer> person_ids = new ArrayList<>();
+        while(resultSet.next()){
+            person_ids.add(resultSet.getInt("person_id"));
+        }
+        if(!person_ids.contains(person_id)){
+            return;
+        }
+
+        hBoxRadioButtons.getChildren().removeAll(radioButtonsFloor);
+        radioButtonsFloor = new ArrayList<>();
+        persID = person_id;
+        updateAll();
     }
 }
