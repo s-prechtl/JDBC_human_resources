@@ -2,5 +2,5 @@
 Best Project for INSY ever made.
 
 # David Hain
-## Teilaufgabe 4
-## EditController.java
+* Teilaufgabe 4
+* EditController.java
