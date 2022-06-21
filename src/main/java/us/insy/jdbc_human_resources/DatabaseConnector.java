@@ -5,13 +5,12 @@ import java.sql.*;
 public class DatabaseConnector {
     // wunderhübsches Singleton, Prachi gönn Plus
     private static DatabaseConnector instance;
-    public static DatabaseConnector getInstance () {
+    public static DatabaseConnector getInstance() {
     if (instance == null) {
         instance = new DatabaseConnector();
     }
     return instance;
 }
-
 
     static final String dbUrl = "jdbc:postgresql://localhost:5432/dhain";
     private Connection connection;
@@ -28,11 +27,24 @@ public class DatabaseConnector {
         }
     }
 
-    public ResultSet executeStatement(String statementString) throws SQLException {
+    public ResultSet executeStatement(String statementString){
         ResultSet resultSet;
-        Statement statement = connection.createStatement();
-        resultSet = statement.executeQuery(statementString);
+        try{
+            Statement statement = connection.createStatement();
+            resultSet = statement.executeQuery(statementString);
+        } catch(SQLException e){
+            throw new RuntimeException(e);
+        }
         return resultSet;
+    }
+
+    public void executeStatementNoError(String statementString){
+        try{
+            Statement statement = connection.createStatement();
+            statement.executeQuery(statementString);
+        } catch(SQLException ignored){
+
+        }
     }
 
 }
