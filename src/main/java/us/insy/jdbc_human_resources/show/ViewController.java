@@ -1,11 +1,7 @@
 package us.insy.jdbc_human_resources.show;
-/*-----------------------------------------------------------------------------
- *              Hoehere Technische Bundeslehranstalt STEYR
- *           Fachrichtung Elektronik und Technische Informatik
- *----------------------------------------------------------------------------*/
 
 import javafx.collections.FXCollections;
-import javafx.event.ActionEvent;
+import javafx.collections.ObservableList;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import us.insy.jdbc_human_resources.DatabaseConnector;
@@ -13,14 +9,6 @@ import us.insy.jdbc_human_resources.DatabaseConnector;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-
-/**
- * Kurzbeschreibung
- *
- * @author :
- * @date :
- * @details Detailbeschreibung
- */
 public class ViewController {
 
     private final DatabaseConnector db = DatabaseConnector.getInstance();
@@ -66,44 +54,59 @@ public class ViewController {
     public HBox hBoxLevel;
     public HBox hBoxRoomNr;
     public HBox hBoxRoomSize;
-    public Spinner<Integer> spinnerID;
-    public ComboBox comboBoxDepartment;
+    public Spinner<String> spinnerID;
+    public ComboBox<String> comboBoxDepartment;
 
     private String statement;
     private ResultSet result;
 
-    private int idForSpinner = -1;
-    private String valueForComboBox = "All";
+
+    private ObservableList<String> ids;
 
     public void initialize() throws SQLException {
-        update();
         updateComboBoxList();
+        comboBoxDepartment.setValue("All");
+        update();
     }
 
     private void update() throws SQLException {
         updateSQLStatement();
         if (!statement.contains("SELEC FROM")) { // because of strip string
-            result = db.executeStatement(statement);
-            while (result.next() && !result.isLast());
-            spinnerID.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, result.getRow()));
+            buildSpinner();
             result = db.executeStatement(statement);
             result.next();
         }
         updateLabels();
-        if (idForSpinner !=  -1) {
-            spinnerID.getValueFactory().setValue(idForSpinner);
+
+        spinnerID.getValueFactory().setValue(labelID.getText());
+    }
+
+    private void buildSpinner() throws SQLException {
+        ids = FXCollections.observableArrayList();
+        String idStatement;
+
+        if (!comboBoxDepartment.getValue().equals("All")) {
+            idStatement = "SELECT person_id FROM t_human_resources hr INNER JOIN t_department dp ON dp.department_id=hr.department_id WHERE dp.name='" + comboBoxDepartment.getValue() + "' ";
+        } else {
+            idStatement = "SELECT person_id FROM t_human_resources ";
         }
+
+        idStatement += "ORDER BY person_id;";
+        result = db.executeStatement(idStatement);
+        while (result.next()) {
+            ids.add(String.valueOf(result.getInt("person_id")));
+        }
+        spinnerID.setValueFactory(new SpinnerValueFactory.ListSpinnerValueFactory<>(ids));
     }
 
     private void updateComboBoxList() throws SQLException {
         ResultSet departmentList = db.executeStatement("SELECT name FROM t_department;");
         ArrayList<String> dpList = new ArrayList<>();
         dpList.add("All");
-        while (departmentList.next()){
+        while (departmentList.next()) {
             dpList.add(departmentList.getString("name"));
         }
         comboBoxDepartment.setItems(FXCollections.observableList(dpList));
-        comboBoxDepartment.setValue(valueForComboBox);
     }
 
     private void updateLabels() throws SQLException {
@@ -203,7 +206,7 @@ public class ViewController {
             statement += "INNER JOIN t_department dp ON hr.department_id=dp.department_id ";
         }
 
-        if (comboBoxDepartment.getValue() != null && !comboBoxDepartment.getValue().toString().equals("All")){
+        if (comboBoxDepartment.getValue() != null && !comboBoxDepartment.getValue().equals("All")) {
             statement += "WHERE dp.name='" + comboBoxDepartment.getValue() + "' ";
         }
 
@@ -215,40 +218,26 @@ public class ViewController {
     }
 
     public void onButtonNextClicked() throws SQLException {
-        int id = Integer.parseInt(labelID.getText()) + 1;
+        int id;
         if (result.isLast()) {
             update();
             id = 1;
+        } else {
+            id = Integer.parseInt(ids.get(ids.indexOf(labelID.getText()) + 1));
         }
-        if (!valueForComboBox.equals("All")) {
-            update();
-            while (result.next()){
-                if (result.getInt("person_id") == id-1){
-                    result.next();
-                    break;
-                }
-            }
-        }
-
         jumpTo(id);
     }
 
     public void onPreviousClicked() throws SQLException {
         int id = Integer.parseInt(labelID.getText()) - 1;
-        if (id < 1 || !valueForComboBox.equals("All")) {
-            update();
-            while (result.next()){
-                if (result.isLast()){
-                    id = result.getInt("person_id");
-                }
-            }
+        if (id < Integer.parseInt(ids.get(0))) {
+            id = Integer.parseInt(ids.get(ids.size() - 1));
         }
         jumpTo(id);
     }
 
-    private void jumpTo(int id, boolean updateSpinnerID) throws SQLException {
-        if (updateSpinnerID) idForSpinner = spinnerID.getValue() + ((id<Integer.parseInt(labelID.getText()))?-1:+1);
-        update();
+    private void jumpTo(int id) throws SQLException {
+        if (Integer.parseInt(labelID.getText()) > id) update();
         while (result.next()) {
             if (result.getInt("person_id") == id) {
                 updateLabels();
@@ -257,24 +246,15 @@ public class ViewController {
         }
     }
 
-    private void jumpTo(int id) throws SQLException {
-        jumpTo(id, true);
-    }
-
     public void onJumpToClicked() throws SQLException {
         if (spinnerID.getValue() != null) {
-            idForSpinner = spinnerID.getValue();
-            update();
-            for (int i = 1; i < spinnerID.getValue(); i++){ //converts number of object to id of result object
-                result.next();
-            }
-            int id = result.getInt("person_id");
-            jumpTo(id, false);
+            int id = Integer.parseInt(spinnerID.getValue());
+            jumpTo(id);
         }
     }
 
     public void onComboBoxDepartmentChanged() throws SQLException {
-        valueForComboBox = (String) comboBoxDepartment.getValue();
+        buildSpinner();
         update();
     }
 }
