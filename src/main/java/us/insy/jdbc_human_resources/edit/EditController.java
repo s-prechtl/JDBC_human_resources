@@ -4,7 +4,6 @@ package us.insy.jdbc_human_resources.edit;
  *           Fachrichtung Elektronik und Technische Informatik
  *----------------------------------------------------------------------------*/
 
-import javafx.collections.ObservableList;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import us.insy.jdbc_human_resources.DatabaseConnector;
@@ -38,25 +37,33 @@ public class EditController{
     private ResultSet result;
     private int persID;
 
+    /**
+     * The spinnerRoomNumber gets set to be at a maximum of the floor with the highest amount of rooms and a minimum of 1
+     * The spinnerPersonID gets set to be at a maximum of the highest person_id and a minimum of one
+     * Then every label/textField/spinner/radioButton gets updated to the lowest ordered person_id
+     * @throws SQLException SQL Error
+     */
     public void initialize() throws SQLException{
-        ResultSet res = db.executeStatement("SELECT max(room_nr) FROM t_hr_room");
-        res.next();
-        spinnerRoomNumber.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, res.getInt("max")));
-        res = db.executeStatement("SELECT person_id FROM t_human_resources ORDER BY person_id");
-        res.next();
-        persID = res.getInt("person_id");
-
+        updateSpinnerRoomNumber();
         updateSpinnerPersonID();
-
         updateAll();
     }
 
+    /**
+     * Updates what it says in the "what" parameter
+     * @param what what should be updated
+     * @throws SQLException SQL Error
+     */
     private void update(String what) throws SQLException{
         updateSQLStatement(what);
         result = db.executeStatement(statement);
         result.next();
     }
 
+    /**
+     * Update all labels/textFields/spinners/radioButtons
+     * @throws SQLException SQL Error
+     */
     private void updateAll() throws SQLException{
         update("first_name");
         labelFirstName.setText(result.getString("first_name"));
@@ -69,7 +76,11 @@ public class EditController{
         update("gender");
         labelGender.setText(result.getString("gender"));
         update("salary");
-        textFieldSalary.setText(result.getString("salary"));
+        try{
+            textFieldSalary.setText(result.getString("salary"));
+        }catch(org.postgresql.util.PSQLException e){
+            textFieldSalary.setText("no salary available");
+        }
         update("city_name");
         labelCityName.setText(result.getString("city_name"));
         update("zip");
@@ -77,11 +88,23 @@ public class EditController{
         update("department_name");
         labelDepartment.setText(result.getString("department_name"));
         update("room_nr");
-        spinnerRoomNumber.getValueFactory().setValue(result.getInt("room_nr"));
+        try{
+            updateSpinnerRoomNumber();
+            spinnerRoomNumber.getValueFactory().setValue(result.getInt("room_nr"));
+        }catch(org.postgresql.util.PSQLException e){
+            spinnerRoomNumber.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(-1, -1));
+            spinnerRoomNumber.getValueFactory().setValue(-1);
+        }
         updateRadioButtonsFloor();
+        update("person_id");
         spinnerPersonID.getValueFactory().setValue(result.getInt("person_id"));
     }
 
+    /**
+     * Updates the spinnerPersonID to be at a maximum of the highest person_id and a minimum of the lowest one
+     * persID parameter gets set to the lowest person_id
+     * @throws SQLException SQL Error
+     */
     private void updateSpinnerPersonID() throws SQLException{
         ResultSet max = db.executeStatement("SELECT max(person_id) FROM t_human_resources");
         max.next();
@@ -91,6 +114,21 @@ public class EditController{
         persID = minID.getInt("min");
     }
 
+    /**
+     * Updates the spinnerRoomNumber to be at a maximum of the highest person_id and a minimum of one
+     * @throws SQLException SQL Error
+     */
+    private void updateSpinnerRoomNumber() throws SQLException{
+        ResultSet res = db.executeStatement("SELECT max(room_nr) FROM t_hr_room");
+        res.next();
+        spinnerRoomNumber.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, res.getInt("max")));
+    }
+
+    /**
+     * Creates one RadioButton for each DISTINCT floor, adds them to the radioButtonsFloor ArrayList
+     * and adds them to the toggleGroupFloor ToggleGroup
+     * @throws SQLException SQL Error
+     */
     private void updateRadioButtonsFloor() throws SQLException{
         ResultSet tempResult = db.executeStatement("SELECT DISTINCT floor FROM t_room ORDER BY floor");
         update("room_floor");
@@ -98,13 +136,21 @@ public class EditController{
             RadioButton radioButton = new RadioButton(tempResult.getString("floor"));
             radioButtonsFloor.add(radioButton);
             toggleGroupFloor.getToggles().add(radioButton);
-            if(radioButton.getText().equals(result.getString("room_floor"))){
-                toggleGroupFloor.selectToggle(radioButton);
+            try{
+                if(radioButton.getText().equals(result.getString("room_floor"))){
+                    toggleGroupFloor.selectToggle(radioButton);
+                }
+            }catch(org.postgresql.util.PSQLException e){
+                toggleGroupFloor.selectToggle(null);
             }
         }
         hBoxRadioButtons.getChildren().addAll(radioButtonsFloor);
     }
 
+    /**
+     * Updates the class variable "statement" with an appropriate SELECT statement for the text in the "what" parameter
+     * @param what what should be selected
+     */
     private void updateSQLStatement(String what){
         statement = "SELECT hr.person_id, ";
 
@@ -165,8 +211,20 @@ public class EditController{
         statement += "ORDER BY hr.person_id;";
     }
 
+    /**
+     * Save the salary, room_nr and room_floor of the person if the person has a salary and is assigned a room
+     * @throws SQLException  SQL Error
+     */
     public void onButtonSaveClicked() throws SQLException{
-        float salary = Integer.parseInt(textFieldSalary.getText());
+        if(toggleGroupFloor.getSelectedToggle() == null || spinnerRoomNumber.getValueFactory().getValue() == -1){
+            return;
+        }
+        float salary;
+        try{
+            salary = Integer.parseInt(textFieldSalary.getText());
+        }catch(NumberFormatException e){
+            return;
+        }
         int room_nr = spinnerRoomNumber.getValueFactory().getValue();
         int person_id = result.getInt("person_id");
         String room_floor = ((RadioButton) toggleGroupFloor.getSelectedToggle()).getText();
@@ -175,6 +233,11 @@ public class EditController{
         db.executeStatementNoError("UPDATE t_hr_room SET room_nr=" + room_nr + ", room_floor='" + room_floor + "' WHERE person_id=" + person_id);
     }
 
+    /**
+     * Delete the entry in the t_salary, t_hr_room and t_human_resources tables and
+     * update everything to the next entry (Ordered by person_id) if existing
+     * @throws SQLException  SQL Error
+     */
     public void onButtonDeleteClicked() throws SQLException{
         int person_id = result.getInt("person_id");
 
@@ -197,6 +260,10 @@ public class EditController{
         updateAll();
     }
 
+    /**
+     * Jump to the selected person_id if existent and updateAll()
+     * @throws SQLException  SQL Error
+     */
     public void onButtonJumpToClicked() throws SQLException{
         // if person_id in spinner does not exist in database => do nothing
         int person_id = spinnerPersonID.getValueFactory().getValue();
@@ -211,6 +278,11 @@ public class EditController{
         updateAll();
     }
 
+    /**
+     * Returns an ArrayList of all available person_ids
+     * @return ArrayList<Integer> => all available person_ids
+     * @throws SQLException  SQL Error
+     */
     private ArrayList<Integer> getAllPersonIDsInDatabase() throws SQLException{
         ResultSet resultSet = db.executeStatement("SELECT person_id FROM t_human_resources");
         ArrayList<Integer> person_ids = new ArrayList<>();

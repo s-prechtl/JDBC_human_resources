@@ -4,6 +4,7 @@ module us.insy.jdbc_human_resources {
 
     requires org.kordamp.bootstrapfx.core;
     requires java.sql;
+    requires org.postgresql.jdbc;
 
     opens us.insy.jdbc_human_resources to javafx.fxml;
     exports us.insy.jdbc_human_resources;
