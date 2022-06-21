@@ -46,12 +46,7 @@ public class EditController{
         res.next();
         persID = res.getInt("person_id");
 
-        res = db.executeStatement("SELECT max(person_id) FROM t_human_resources");
-        res.next();
-        ResultSet minID = db.executeStatement("SELECT min(person_id) FROM t_human_resources");
-        minID.next();
-        spinnerPersonID.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(minID.getInt("min"), res.getInt("max")));
-        persID = minID.getInt("min");
+        updateSpinnerPersonID();
 
         updateAll();
     }
@@ -85,6 +80,15 @@ public class EditController{
         spinnerRoomNumber.getValueFactory().setValue(result.getInt("room_nr"));
         updateRadioButtonsFloor();
         spinnerPersonID.getValueFactory().setValue(result.getInt("person_id"));
+    }
+
+    private void updateSpinnerPersonID() throws SQLException{
+        ResultSet max = db.executeStatement("SELECT max(person_id) FROM t_human_resources");
+        max.next();
+        ResultSet minID = db.executeStatement("SELECT min(person_id) FROM t_human_resources");
+        minID.next();
+        spinnerPersonID.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(minID.getInt("min"), max.getInt("max")));
+        persID = minID.getInt("min");
     }
 
     private void updateRadioButtonsFloor() throws SQLException{
@@ -177,16 +181,26 @@ public class EditController{
         db.executeStatementNoError("DELETE FROM t_salary WHERE person_id=" + person_id);
         db.executeStatementNoError("DELETE FROM t_hr_room WHERE person_id=" + person_id);
         db.executeStatementNoError("DELETE FROM t_human_resources WHERE person_id=" + person_id);
+
+        // check if person_id +1 is valid, if so update all labels etc., if not check for person_id +2 ...
+        ArrayList<Integer> person_ids = getAllPersonIDsInDatabase();
+        person_id += 1;
+        while(!person_ids.contains(person_id)){
+            person_id += 1;
+        }
+
+        hBoxRadioButtons.getChildren().removeAll(radioButtonsFloor);
+        radioButtonsFloor = new ArrayList<>();
+        persID = person_id;
+        updateSpinnerPersonID();
+        spinnerPersonID.getValueFactory().setValue(result.getInt("person_id"));
+        updateAll();
     }
 
     public void onButtonJumpToClicked() throws SQLException{
         // if person_id in spinner does not exist in database => do nothing
         int person_id = spinnerPersonID.getValueFactory().getValue();
-        ResultSet resultSet = db.executeStatement("SELECT person_id FROM t_human_resources");
-        ArrayList<Integer> person_ids = new ArrayList<>();
-        while(resultSet.next()){
-            person_ids.add(resultSet.getInt("person_id"));
-        }
+        ArrayList<Integer> person_ids = getAllPersonIDsInDatabase();
         if(!person_ids.contains(person_id)){
             return;
         }
@@ -195,5 +209,15 @@ public class EditController{
         radioButtonsFloor = new ArrayList<>();
         persID = person_id;
         updateAll();
+    }
+
+    private ArrayList<Integer> getAllPersonIDsInDatabase() throws SQLException{
+        ResultSet resultSet = db.executeStatement("SELECT person_id FROM t_human_resources");
+        ArrayList<Integer> person_ids = new ArrayList<>();
+        while(resultSet.next()){
+            person_ids.add(resultSet.getInt("person_id"));
+        }
+
+        return person_ids;
     }
 }
