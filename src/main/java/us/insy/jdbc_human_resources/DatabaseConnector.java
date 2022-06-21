@@ -40,4 +40,13 @@ public class DatabaseConnector{
         return resultSet;
     }
 
+    public void executeStatementNoError(String statementString){
+        try{
+            Statement statement = connection.createStatement();
+            statement.executeQuery(statementString);
+        } catch(SQLException e){
+
+        }
+    }
+
 }
