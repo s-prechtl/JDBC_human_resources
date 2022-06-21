@@ -29,7 +29,7 @@ public class DatabaseConnector{
     }
 
     public ResultSet executeStatement(String statementString){
-        ResultSet resultSet = null;
+        ResultSet resultSet;
         try{
             Statement statement = connection.createStatement();
             resultSet = statement.executeQuery(statementString);
@@ -43,7 +43,9 @@ public class DatabaseConnector{
         try{
             Statement statement = connection.createStatement();
             statement.executeQuery(statementString);
-        }catch(Exception e){}
+        } catch(SQLException ignored){
+
+        }
     }
 
 }
