@@ -76,9 +76,7 @@ public class ViewController {
             result = db.executeStatement(statement);
             result.next();
         }
-        updateLabels();
-
-        spinnerID.getValueFactory().setValue(labelID.getText());
+        updateUI();
     }
 
     private void buildSpinner() throws SQLException {
@@ -109,7 +107,7 @@ public class ViewController {
         comboBoxDepartment.setItems(FXCollections.observableList(dpList));
     }
 
-    private void updateLabels() throws SQLException {
+    private void updateUI() throws SQLException {
         updateLabelInt(hBoxID, labelID, checkBoxPersID, "person_id");
         updateLabelString(hBoxFirstname, labelFirstName, checkBoxFirstName, "first_name");
         updateLabelString(hBoxLastname, labelLastName, checkBoxLastname, "last_name");
@@ -126,7 +124,7 @@ public class ViewController {
 
         hBoxEmail.setVisible(result.getString("email") != null);
         hBoxDepartment.setVisible(checkBoxRoomSize.isSelected() || checkBoxRoomNr.isSelected() || checkBoxFloorLevel.isSelected() || checkBoxDepartment.isSelected());
-        
+        spinnerID.getValueFactory().setValue(labelID.getText());
     }
 
     private void updateLabelInt(HBox hBox, Label label, CheckBox shown, String columnLabel) throws SQLException {
@@ -237,10 +235,10 @@ public class ViewController {
     }
 
     private void jumpTo(int id) throws SQLException {
-        if (Integer.parseInt(labelID.getText()) > id) update();
+        update();
         while (result.next()) {
             if (result.getInt("person_id") == id) {
-                updateLabels();
+                updateUI();
                 break;
             }
         }
