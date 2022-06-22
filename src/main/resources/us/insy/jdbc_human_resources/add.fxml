@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox alignment="CENTER" prefHeight="534.0" prefWidth="490.0" spacing="10.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="us.insy.jdbc_human_resources.add.AddController">
+<VBox alignment="CENTER" prefHeight="10000000" prefWidth="1000000000" spacing="10.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="us.insy.jdbc_human_resources.add.AddController">
 
     <padding>
         <Insets bottom="30.0" left="30.0" right="30.0" top="30.0" />
@@ -28,13 +28,14 @@
         <TextField fx:id="textFieldEmail"/>
     </VBox>
     <VBox prefWidth="100.0">
-        <Label text="Geburtsdatum"/>
-        <DatePicker fx:id="datePickerBirthDate" prefHeight="25.0" prefWidth="200.0"/>
-    </VBox>
-    <VBox prefWidth="100.0">
         <Label text="Geschlecht"/>
         <HBox fx:id="hBoxGender" spacing="5.0"/>
     </VBox>
+    <VBox prefWidth="100.0">
+        <Label text="Geburtsdatum"/>
+        <DatePicker fx:id="datePickerBirthDate" prefHeight="25.0" prefWidth="200.0"/>
+    </VBox>
+
     <VBox prefWidth="100.0">
         <Label text="Gehalt"/>
         <TextField fx:id="textFieldSalary"/>

@@ -21,19 +21,19 @@ public class DatabaseConnector {
 
     private void startConnection() {
         try {
-            connection = DriverManager.getConnection(dbUrl, HelloApplication.user, HelloApplication.pass);
+            connection = DriverManager.getConnection(dbUrl, MainApplication.user, MainApplication.pass);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
 
     public ResultSet executeStatement(String statementString){
-        ResultSet resultSet;
+        ResultSet resultSet = null;
         try{
             Statement statement = connection.createStatement();
             resultSet = statement.executeQuery(statementString);
         } catch(SQLException e){
-            throw new RuntimeException(e);
+            MainApplication.errorBox("Could not execute Query");
         }
         return resultSet;
     }
