@@ -19,14 +19,22 @@ public class DatabaseConnector {
         startConnection();
     }
 
-    private void startConnection() {
-        try {
+    /**
+     * Connects with the database with the username and password from the CLI Arguments
+     */
+    private void startConnection(){
+        try{
             connection = DriverManager.getConnection(dbUrl, MainApplication.user, MainApplication.pass);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
 
+    /**
+     * Executes the query written in the statementString
+     * @param statementString Query to execute
+     * @return ResultSet of the results from the query
+     */
     public ResultSet executeStatement(String statementString){
         ResultSet resultSet = null;
         try{
@@ -38,6 +46,12 @@ public class DatabaseConnector {
         return resultSet;
     }
 
+    /**
+     * Executes the query written in the statementString
+     * Does not throw any Exceptions
+     * Used for any query that do not return a ResultSet like "INSERT INTO" or "DELETE"
+     * @param statementString Query to execute
+     */
     public void executeStatementNoError(String statementString){
         try{
             Statement statement = connection.createStatement();
