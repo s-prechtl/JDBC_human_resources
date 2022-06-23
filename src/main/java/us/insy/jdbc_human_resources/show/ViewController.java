@@ -9,6 +9,7 @@ import us.insy.jdbc_human_resources.DatabaseConnector;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+
 public class ViewController {
 
     private final DatabaseConnector db = DatabaseConnector.getInstance();
@@ -69,6 +70,11 @@ public class ViewController {
         update();
     }
 
+    /**
+     * used to update both UI as well as the SQL result
+     *
+     * @throws SQLException
+     */
     private void update() throws SQLException {
         updateSQLStatement();
         if (!statement.contains("SELEC FROM")) { // because of strip string
@@ -79,6 +85,11 @@ public class ViewController {
         updateUI();
     }
 
+    /**
+     * builds the spinner with the correct IDs for the hr people for jump to
+     *
+     * @throws SQLException
+     */
     private void buildSpinner() throws SQLException {
         ids = FXCollections.observableArrayList();
         String idStatement;
@@ -97,6 +108,11 @@ public class ViewController {
         spinnerID.setValueFactory(new SpinnerValueFactory.ListSpinnerValueFactory<>(ids));
     }
 
+    /**
+     * Updates Items in the Combobox for the Departments to select
+     *
+     * @throws SQLException
+     */
     private void updateComboBoxList() throws SQLException {
         ResultSet departmentList = db.executeStatement("SELECT name FROM t_department;");
         ArrayList<String> dpList = new ArrayList<>();
@@ -107,45 +123,54 @@ public class ViewController {
         comboBoxDepartment.setItems(FXCollections.observableList(dpList));
     }
 
+    /**
+     * updates the UI
+     *
+     * @throws SQLException
+     */
     private void updateUI() throws SQLException {
-        updateLabelInt(hBoxID, labelID, checkBoxPersID, "person_id");
-        updateLabelString(hBoxFirstname, labelFirstName, checkBoxFirstName, "first_name");
-        updateLabelString(hBoxLastname, labelLastName, checkBoxLastname, "last_name");
-        updateLabelString(hBoxGender, labelGender, checkBoxGender, "gender");
-        updateLabelString(hBoxBirthDate, labelBirthDate, checkBoxBirthDate, "date_of_birth");
-        updateLabelString(hBoxEmail, labelEmail, checkBoxEmail, "email");
-        updateLabelInt(hBoxSalary, labelSalary, checkBoxSalary, "salary");
-        updateLabelString(hBoxCity, labelCity, checkBoxLivingIn, "cname");
-        updateLabelString(hBoxZip, labelZipCode, checkBoxZipCode, "zip");
-        updateLabelString(hBoxDepName, labelDepartmentName, checkBoxDepartment, "dpName");
-        updateLabelInt(hBoxRoomNr, labelRoomNumber, checkBoxRoomNr, "room_nr");
-        updateLabelString(hBoxLevel, labelLevel, checkBoxFloorLevel, "room_floor");
-        updateLabelInt(hBoxRoomSize, labelRoomSize, checkBoxRoomSize, "size");
+        updateLabel(hBoxID, labelID, checkBoxPersID, "person_id");
+        updateLabel(hBoxFirstname, labelFirstName, checkBoxFirstName, "first_name");
+        updateLabel(hBoxLastname, labelLastName, checkBoxLastname, "last_name");
+        updateLabel(hBoxGender, labelGender, checkBoxGender, "gender");
+        updateLabel(hBoxBirthDate, labelBirthDate, checkBoxBirthDate, "date_of_birth");
+        updateLabel(hBoxEmail, labelEmail, checkBoxEmail, "email");
+        updateLabel(hBoxSalary, labelSalary, checkBoxSalary, "salary");
+        updateLabel(hBoxCity, labelCity, checkBoxLivingIn, "cname");
+        updateLabel(hBoxZip, labelZipCode, checkBoxZipCode, "zip");
+        updateLabel(hBoxDepName, labelDepartmentName, checkBoxDepartment, "dpName");
+        updateLabel(hBoxRoomNr, labelRoomNumber, checkBoxRoomNr, "room_nr");
+        updateLabel(hBoxLevel, labelLevel, checkBoxFloorLevel, "room_floor");
+        updateLabel(hBoxRoomSize, labelRoomSize, checkBoxRoomSize, "size");
 
         hBoxEmail.setVisible(result.getString("email") != null);
         hBoxDepartment.setVisible(checkBoxRoomSize.isSelected() || checkBoxRoomNr.isSelected() || checkBoxFloorLevel.isSelected() || checkBoxDepartment.isSelected());
         spinnerID.getValueFactory().setValue(labelID.getText());
+        hBoxLiving.setVisible(checkBoxZipCode.isSelected() || checkBoxLivingIn.isSelected());
     }
 
-    private void updateLabelInt(HBox hBox, Label label, CheckBox shown, String columnLabel) throws SQLException {
-        hBox.setVisible(shown.isSelected());
-        if (shown.isSelected()) {
-            label.setText(String.valueOf(result.getInt(columnLabel)));
-        }
-    }
-
-    private void updateLabelString(HBox hBox, Label label, CheckBox shown, String columnLabel) throws SQLException {
+    /**
+     * Updates the value in the given label and hides the Hbox if the checkbox isnt checked
+     *
+     * @param hBox        hbox for the naming label and the value label
+     * @param label       value label
+     * @param shown       status if the values should be genereated or not
+     * @param columnLabel what the column is called in the sql result
+     * @throws SQLException
+     */
+    private void updateLabel(HBox hBox, Label label, CheckBox shown, String columnLabel) throws SQLException {
         hBox.setVisible(shown.isSelected());
         if (shown.isSelected()) {
             label.setText(result.getString(columnLabel));
         }
     }
 
+    /**
+     * updates the SQL statement according to all checkbox values
+     */
     private void updateSQLStatement() {
         statement = "SELECT ";
-        if (checkBoxPersID.isSelected()) {
-            statement += "hr.person_id, ";
-        }
+        statement += "hr.person_id, ";
         if (checkBoxFirstName.isSelected()) {
             statement += "first_name, ";
         }
@@ -200,7 +225,7 @@ public class ViewController {
             statement += "INNER JOIN t_city city ON hr.zip=city.zip ";
         }
 
-        if (checkBoxDepartment.isSelected()) {
+        if (checkBoxDepartment.isSelected() || comboBoxDepartment.getValue() != null) {
             statement += "INNER JOIN t_department dp ON hr.department_id=dp.department_id ";
         }
 
@@ -211,10 +236,20 @@ public class ViewController {
         statement += "ORDER BY hr.person_id;";
     }
 
+    /**
+     * calls update whenever a checkbox is clicked
+     *
+     * @throws SQLException
+     */
     public void onCheckBoxClicked() throws SQLException {
         update();
     }
 
+    /**
+     * goes to the next person of hr
+     *
+     * @throws SQLException
+     */
     public void onButtonNextClicked() throws SQLException {
         int id;
         if (result.isLast()) {
@@ -226,6 +261,11 @@ public class ViewController {
         jumpTo(id);
     }
 
+    /**
+     * goes to the previous person of hr
+     *
+     * @throws SQLException
+     */
     public void onPreviousClicked() throws SQLException {
         int id = Integer.parseInt(labelID.getText()) - 1;
         if (id < Integer.parseInt(ids.get(0))) {
@@ -234,6 +274,12 @@ public class ViewController {
         jumpTo(id);
     }
 
+    /**
+     * jumps to a desired person of hr
+     *
+     * @param id tells which person needs to be jumped to
+     * @throws SQLException
+     */
     private void jumpTo(int id) throws SQLException {
         update();
         while (result.next()) {
@@ -244,6 +290,11 @@ public class ViewController {
         }
     }
 
+    /**
+     * gets the spinner's value and jumps to the person
+     *
+     * @throws SQLException
+     */
     public void onJumpToClicked() throws SQLException {
         if (spinnerID.getValue() != null) {
             int id = Integer.parseInt(spinnerID.getValue());
@@ -251,6 +302,11 @@ public class ViewController {
         }
     }
 
+    /**
+     * updates the spinner and calls update for sql and ui update
+     *
+     * @throws SQLException
+     */
     public void onComboBoxDepartmentChanged() throws SQLException {
         buildSpinner();
         update();
